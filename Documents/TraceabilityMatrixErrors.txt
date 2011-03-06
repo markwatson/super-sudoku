@@ -1,0 +1,51 @@
+Traceability Holes:
+
+Req	Suggested Section to Add
+
+2.4.2	Architectural and Component Design, User Interface Design
+2.4.3	Scope, Architectural and Component Design
+2.4.4	Scope
+2.4.5	Scope
+
+3.1.1	User Interface Design
+3.1.2	User Interface Design
+3.1.3	Architectural and Component Design, User Interface Design
+3.1.4	Architectural and Component Design (Section 3.2.3)
+3.1.7	Architectural and Component Design (Section 3.2.1)
+3.1.8	User Interface Design
+3.1.9	User Interface Design
+3.1.10	User Interface Design
+3.1.11	User Interface Design
+3.1.13	User Interface Design
+3.1.14	User Interface Design
+3.1.15	User Interface Design
+3.1.16	User Interface Design
+3.1.17	User Interface Design
+3.1.18	User Interface Design
+3.1.19	User Interface Design
+3.1.20	User Interface Design
+3.1.21	User Interface Design
+3.1.22	User Interface Design
+3.1.24	User Interface Design
+3.1.27	Architectural and Component Design (Section 3.2.3), User Interface Design
+3.1.29	User Interface Design
+3.1.30	Architectural and Component Design, User Interface Design
+3.1.31	User Interface Design
+3.1.32	User Interface Design
+3.1.33	User Interface Design
+3.1.34	User Interface Design
+3.1.35	Architectural and Component Design, User Interface Design
+3.1.36	User Interface Design
+3.1.37	User Interface Design
+3.1.38	User Interface Design
+3.1.39	User Interface Design
+3.1.40	User Interface Design
+3.1.41	User Interface Design
+3.1.42	Architectural and Component Design, User Interface Design
+3.1.43	User Interface Design
+3.1.44	User Interface Design
+3.1.45	User Interface Design
+3.1.46	User Interface Design (CORRECTION: SPECIFY WHAT LETTER TO USE IF FIRST LETTER IS TAKEN)
+3.4.1	Architectural and Component Design (Section 3.2.3.3.5)
+3.4.2	Architectural and Component Design (CORRECTION: CHANGE LIMIT FROM "20-30" TO "UNDER 25")
+3.4.3	User Interface Design
