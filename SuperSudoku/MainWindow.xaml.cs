@@ -135,5 +135,18 @@ namespace SuperSudoku
         {
             this.SaveFile(true);
         }
-	}
+
+        private void GridElement_GotFocus(object sender, RoutedEventArgs e)
+        {
+            //((TextBox)sender).Text = "3";
+            ((TextBox)sender).Style = (Style)(this.Resources["GridElementFocused"]);
+        }
+
+        private void GridElement_LostFocus(object sender, RoutedEventArgs e)
+        {
+            ((TextBox)sender).Style = (Style)(this.Resources["GridElement"]);
+        }
+
+
+    }
 }

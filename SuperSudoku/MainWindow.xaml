@@ -8,6 +8,9 @@
 	Width="372" Height="505" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
 
 	<Window.Resources>
+        <SolidColorBrush x:Key="TextColor" Color="#FF171717"/>
+        <SolidColorBrush x:Key="SelectedBorderColor" Color="#FF9DBFFF"/>
+        
 		<SolidColorBrush x:Key="BaseBorder-Sketch" Color="#FF606060"/>
 
 		<SolidColorBrush x:Key="BaseBackground-Sketch" Color="#FFFFFFFF"/>
@@ -52,9 +55,30 @@
 				</Trigger>
 			</Style.Triggers>
 		</Style>
-		<Storyboard x:Key="OnMouseRightButtonUp1"/>
 
-	</Window.Resources>
+    <!-- Grid Element Styles -->
+        <Style x:Key="GridElement" TargetType="{x:Type TextBox}">
+            <Setter Property="Foreground" Value="{StaticResource TextColor}"/>
+            <Setter Property="Background" Value="{StaticResource BaseBackground-Sketch}"/>
+            <Setter Property="FontFamily" Value="{DynamicResource FontFamily-Sketch}"/>
+            <Setter Property="FontWeight" Value="{DynamicResource FontWeight-Sketch}"/>
+            <Setter Property="FontSize" Value="{DynamicResource SizeDouble-Sketch}"/>
+            
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Foreground" Value="{DynamicResource DisabledForeground-Sketch}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="GridElementFocused" TargetType="{x:Type TextBox}" BasedOn="{StaticResource GridElement}">
+            <Setter Property="BorderBrush" Value="{StaticResource SelectedBorderColor}"/>
+        </Style>
+
+        <ControlTemplate x:Key="GridElementTemplate" TargetType="{x:Type TextBox}">
+            <TextBox FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Width="40" Height="40" IsReadOnly="True" GotFocus="GridElement_GotFocus" Style="{StaticResource GridElement}" LostFocus="GridElement_LostFocus" />
+        </ControlTemplate>
+    
+    </Window.Resources>
 
 	<Grid x:Name="LayoutRoot">
 		<Menu Height="24" VerticalAlignment="Top">
@@ -85,103 +109,103 @@
 			</Rectangle.Fill>
 		</Rectangle>
 		<UniformGrid Margin="0,21,0,0" Height="120" VerticalAlignment="Top" HorizontalAlignment="Left" Width="120" Rows="3" Columns="3">
-			<TextBox x:Name="_1x1" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" Text="8" BorderThickness="3" FontFamily="Arial Black" Background="#FFE3E9EF" Height="40" Width="40"/>
-			<TextBox x:Name="_1x2" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White" Width="40" Height="40"/>
-			<TextBox x:Name="_1x3" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White" Width="40" Height="40"/>
-			<TextBox x:Name="_2x1" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White" Width="40"/>
-			<TextBox x:Name="_2x2" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White" Margin="0" Text="5" Width="40" Height="40"/>
-			<TextBox x:Name="_2x3" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White" Width="40" Height="40"/>
-			<TextBox x:Name="_3x1" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White" Width="40" Height="40"/>
-			<TextBox x:Name="_3x2" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="#FFE3E9EF" Text="1" Width="40" Height="40"/>
-			<TextBox x:Name="_3x3" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White" Width="40" Height="40"/>
+            <TextBox x:Name="_1x1" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_1x2" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_1x3" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_2x1" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_2x2" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_2x3" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_3x1" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_3x2" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_3x3" Template="{StaticResource GridElementTemplate}"/>
 		</UniformGrid>
 		<UniformGrid Margin="124,21,0,0" Height="120" VerticalAlignment="Top" HorizontalAlignment="Left" Width="120">
-			<TextBox x:Name="_1x4" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" Text="4" BorderThickness="3" FontFamily="Arial Black" Background="#FFE3E9EF"/>
-			<TextBox x:Name="_1x5" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White"/>
-			<TextBox x:Name="_1x6" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="#FFE3E9EF" Text="6"/>
-			<TextBox x:Name="_2x4" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White"/>
-			<TextBox x:Name="_2x5" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White"/>
-			<TextBox x:Name="_2x6" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White"/>
-			<TextBox x:Name="_3x4" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White"/>
-			<TextBox x:Name="_3x5" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White"/>
-			<TextBox x:Name="_3x6" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White"/>
+            <TextBox x:Name="_1x4" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_1x5" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_1x6" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_2x4" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_2x5" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_2x6" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_3x4" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_3x5" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_3x6" Template="{StaticResource GridElementTemplate}"/>
 		</UniformGrid>
 		<UniformGrid Margin="248,21,0,0" HorizontalAlignment="Left" Height="120" VerticalAlignment="Top" Width="120">
-			<TextBox x:Name="_1x7" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White"/>
-			<TextBox x:Name="_1x8" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White"/>
-			<TextBox x:Name="_1x9" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="#FFE3E9EF" Text="7"/>
-			<TextBox x:Name="_2x7" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="#FFE3E9EF" Text="4"/>
-			<TextBox x:Name="_2x8" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White"/>
-			<TextBox x:Name="_2x9" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White"/>
-			<TextBox x:Name="_3x7" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="#FFE3E9EF" Text="6"/>
-			<TextBox x:Name="_3x8" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="#FFE3E9EF" Text="5"/>
-			<TextBox x:Name="_3x9" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White"/>
+            <TextBox x:Name="_1x7" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_1x8" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_1x9" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_2x7" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_2x8" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_2x9" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_3x7" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_3x8" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_3x9" Template="{StaticResource GridElementTemplate}"/>
 		</UniformGrid>
 		<UniformGrid Margin="0,145,0,0" HorizontalAlignment="Left" Width="120" Height="120" VerticalAlignment="Top">
-			<TextBox x:Name="_1x10" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" Text="5" BorderThickness="3" FontFamily="Arial Black" Background="#FFE3E9EF"/>
-			<TextBox x:Name="_1x11" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White"/>
-			<TextBox x:Name="_1x12" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="#FFE3E9EF" Text="9"/>
-			<TextBox x:Name="_2x10" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White"/>
-			<TextBox x:Name="_2x11" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White"/>
-			<TextBox x:Name="_2x12" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White"/>
-			<TextBox x:Name="_3x10" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White"/>
-			<TextBox x:Name="_3x11" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="#FFE3E9EF" Text="4"/>
-			<TextBox x:Name="_3x12" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="#FFE3E9EF" Text="8"/>
+            <TextBox x:Name="_1x10" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_1x11" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_1x12" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_2x10" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_2x11" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_2x12" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_3x10" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_3x11" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_3x12" Template="{StaticResource GridElementTemplate}"/>
 		</UniformGrid>
 		<UniformGrid Margin="124,145,0,0" HorizontalAlignment="Left" Width="120" Height="120" VerticalAlignment="Top" RenderTransformOrigin="0.467,0.592">
-			<TextBox x:Name="_1x13" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White"/>
-			<TextBox x:Name="_1x14" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="#FFE3E9EF" Text="3"/>
-			<TextBox x:Name="_1x15" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White"/>
-			<TextBox x:Name="_2x13" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="#FFFF6868" Text="5"/>
-			<TextBox x:Name="_2x14" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="#FFE3E9EF" Text="7"/>
-			<TextBox x:Name="_2x15" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White"/>
-			<TextBox x:Name="_3x13" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White"/>
-			<TextBox x:Name="_3x14" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="#FFE3E9EF" Text="2"/>
-			<TextBox x:Name="_3x15" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White"/>
+            <TextBox x:Name="_1x13" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_1x14" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_1x15" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_2x13" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_2x14" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_2x15" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_3x13" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_3x14" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_3x15" Template="{StaticResource GridElementTemplate}"/>
 		</UniformGrid>
 		<UniformGrid Margin="248,145,0,0" HorizontalAlignment="Left" Width="120" Height="120" VerticalAlignment="Top">
-			<TextBox x:Name="_1x16" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" Text="7" BorderThickness="3" FontFamily="Arial Black" Background="#FFE3E9EF"/>
-			<TextBox x:Name="_1x17" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="#FFE3E9EF" Text="8"/>
-			<TextBox x:Name="_1x18" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White"/>
-			<TextBox x:Name="_2x16" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White"/>
-			<TextBox x:Name="_2x17" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White"/>
-			<TextBox x:Name="_2x18" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White"/>
-			<TextBox x:Name="_3x16" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="#FFE3E9EF" Text="1"/>
-			<TextBox x:Name="_3x17" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White"/>
-			<TextBox x:Name="_3x18" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="#FFE3E9EF" Text="3"/>
+            <TextBox x:Name="_1x16" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_1x17" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_1x18" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_2x16" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_2x17" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_2x18" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_3x16" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_3x17" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_3x18" Template="{StaticResource GridElementTemplate}"/>
 		</UniformGrid>
 		<UniformGrid Margin="0,269,0,0" Height="120" VerticalAlignment="Top" HorizontalAlignment="Left" Width="120">
-			<TextBox x:Name="_1x19" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White"/>
-			<TextBox x:Name="_1x20" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="#FFE3E9EF" Text="5"/>
-			<TextBox x:Name="_1x21" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="#FFE3E9EF" Text="2"/>
-			<TextBox x:Name="_2x19" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White"/>
-			<TextBox x:Name="_2x20" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White"/>
-			<TextBox x:Name="_2x21" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="#FFE3E9EF" Text="1"/>
-			<TextBox x:Name="_3x19" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="#FFE3E9EF" Text="3"/>
-			<TextBox x:Name="_3x20" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White"/>
-			<TextBox x:Name="_3x21" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White"/>
+            <TextBox x:Name="_1x19" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_1x20" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_1x21" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_2x19" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_2x20" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_2x21" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_3x19" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_3x20" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_3x21" Template="{StaticResource GridElementTemplate}"/>
 		</UniformGrid>
 		<UniformGrid Margin="124,269,0,0" Height="120" VerticalAlignment="Top" HorizontalAlignment="Left" Width="120">
-			<TextBox x:Name="_1x22" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White"/>
-			<TextBox x:Name="_1x23" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White"/>
-			<TextBox x:Name="_1x24" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White"/>
-			<TextBox x:Name="_2x22" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White"/>
-			<TextBox x:Name="_2x23" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White"/>
-			<TextBox x:Name="_2x24" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White"/>
-			<TextBox x:Name="_3x22" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="#FFE3E9EF" Text="9"/>
-			<TextBox x:Name="_3x23" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White"/>
-			<TextBox x:Name="_3x24" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="#FFE3E9EF" Text="2"/>
+            <TextBox x:Name="_1x22" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_1x23" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_1x24" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_2x22" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_2x23" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_2x24" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_3x22" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_3x23" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_3x24" Template="{StaticResource GridElementTemplate}"/>
 		</UniformGrid>
 		<UniformGrid Margin="248,269,0,0" HorizontalAlignment="Left" Height="120" VerticalAlignment="Top" Width="120">
-			<TextBox x:Name="_1x25" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White"/>
-			<TextBox x:Name="_1x26" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="#FFE3E9EF" Text="9"/>
-			<TextBox x:Name="_1x27" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White"/>
-			<TextBox x:Name="_2x25" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White"/>
-			<TextBox x:Name="_2x26" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White"/>
-			<TextBox x:Name="_2x27" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White"/>
-			<TextBox x:Name="_3x25" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White"/>
-			<TextBox x:Name="_3x26" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="White"/>
-			<TextBox x:Name="_3x27" FontSize="26.667" TextAlignment="Center" FontWeight="Bold" BorderThickness="3" FontFamily="Arial Black" Background="#FFE3E9EF" Text="5"/>
+            <TextBox x:Name="_1x25" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_1x26" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_1x27" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_2x25" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_2x26" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_2x27" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_3x25" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_3x26" Template="{StaticResource GridElementTemplate}"/>
+            <TextBox x:Name="_3x27" Template="{StaticResource GridElementTemplate}"/>
 		</UniformGrid>
 		<Menu VerticalAlignment="Bottom" d:LayoutOverrides="Width" Margin="0,0,0,-0.04" RenderTransformOrigin="0.5,0.5" IsEnabled="False">
 			<Menu.Background>
