@@ -61,15 +61,15 @@
 			<MenuItem x:Name="FileMenu" Header="File">
 				<MenuItem x:Name="NewGame" Header="New"/>
 				<MenuItem x:Name="LoadGame" Header="Load"/>
-				<MenuItem x:Name="SaveGame" Header="Save"/>
-				<MenuItem x:Name="SaveGameUnsolved" Header="Save Unsolved"/>
+				<MenuItem x:Name="SaveGame" Header="Save" Click="SaveGame_Click" />
+				<MenuItem x:Name="SaveGameUnsolved" Header="Save Unsolved" Click="SaveGameUnsolved_Click" />
 				<MenuItem x:Name="EnterPuzzle" Header="Enter Puzzle"/>
 				<Separator/>
-				<MenuItem x:Name="Exit" Header="Exit"/>
+				<MenuItem x:Name="Exit" Header="Exit" DataContext="{Binding}" Click="Exit_Click" />
 			</MenuItem>
 			<MenuItem x:Name="OptionsMenu" Header="Options">
-				<MenuItem x:Name="AlwaysShowHints" Header="Always Show Hints" IsCheckable="True"/>
-				<MenuItem x:Name="ShowErrors" Header="Show Errors" IsCheckable="True"/>
+				<MenuItem x:Name="AlwaysShowHints" Header="Always Show Hints" IsCheckable="True" Checked="AlwaysShowHints_Checked" Unchecked="AlwaysShowHints_Unchecked" />
+				<MenuItem x:Name="ShowErrors" Header="Show Errors" IsCheckable="True" Checked="ShowErrors_Checked" Unchecked="ShowErrors_Unchecked" />
 			</MenuItem>
 			<MenuItem x:Name="HelpMenu" Header="Help">
 				<MenuItem x:Name="GameRules" Header="Game Rules"/>
