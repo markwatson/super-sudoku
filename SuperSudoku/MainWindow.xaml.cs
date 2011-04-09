@@ -1,14 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using Microsoft.Win32;
 
 namespace SuperSudoku
@@ -16,35 +9,32 @@ namespace SuperSudoku
 	/// <summary>
 	/// GUI Logic goes in this MainWindow class. It also contains the state of the application.
 	/// </summary>
-	public partial class MainWindow : Window
+	public partial class MainWindow
 	{
         // Game elements are implemented in seperate classes and instantiated to properties of this class here:
-        FileHandler fileHandler;
-        GameBoard gameBoard;
+        private readonly FileHandler fileHandler;
+        private readonly GameBoard gameBoard;
 
         // State properties are defined here
-        private bool showHints = false;
-        private bool showErrors = false;
+        private bool ShowHintsOn;
+        private bool ShowErrorsOn;
 
         // GUI elements are defined here
-        SaveFileDialog saveGameDialog;
+        private readonly SaveFileDialog saveGameDialog;
 
         /// <summary>
         /// This function instantiates all the game objects and sets up the game window.
         /// </summary>
 		public MainWindow()
 		{
-			this.InitializeComponent();
+			InitializeComponent();
 
             // Initialize game elements
             fileHandler = new FileHandler();
             gameBoard = new GameBoard();
 
 			// Initialize the save game dialog
-            InitializeComponent();
-            saveGameDialog = new SaveFileDialog();
-            saveGameDialog.Filter = "Sudoku Games | *.sud";
-            saveGameDialog.DefaultExt = ".sud";
+            saveGameDialog = new SaveFileDialog {Filter = "Sudoku Games | *.sud", DefaultExt = ".sud"};
 		}
 
         // The following methods are helper methods
@@ -54,7 +44,7 @@ namespace SuperSudoku
         private void SaveFile(bool saveUnsolved = false)
         {
             // Show save file dialog box
-            Nullable<bool> result = saveGameDialog.ShowDialog();
+            var result = saveGameDialog.ShowDialog();
 
             // Process save file dialog box results
             if (result == true)
@@ -62,7 +52,7 @@ namespace SuperSudoku
                 // Save document
                 string fileName = saveGameDialog.FileName;
 
-                bool success = false;
+                bool success;
                 if (!saveUnsolved)
                 {
                     success = fileHandler.SaveFile(gameBoard, fileName);
@@ -89,7 +79,7 @@ namespace SuperSudoku
         /// These algorithms follow a very computer sciency way to approach
         /// the problem: screw math, just brute force it.
         /// </summary>
-        private string GetLeftGridItem(string element)
+        private static string GetLeftGridItem(string element)
         {
             string ret = element;
 
@@ -137,16 +127,16 @@ namespace SuperSudoku
         /// <summary>
         /// This function is similar to the GetLeftGridItem function, but gets the item to the right.
         /// </summary>
-        private string GetRightGridItem(string element)
+        private static string GetRightGridItem(string element)
         {
-            string ret = element;
+            var ret = element;
 
             if (element.IndexOf('x') != -1 && element.IndexOf('_') == 0)
             {
                 // first chop off the leading underscore and split by x, then put into ints
-                string[] elements = element.Substring(1).Split('x');
-                int grid = Convert.ToInt32(elements[0]);
-                int elem = Convert.ToInt32(elements[1]);
+                var elements = element.Substring(1).Split('x');
+                var grid = Convert.ToInt32(elements[0]);
+                var elem = Convert.ToInt32(elements[1]);
 
                 // if we're on the right side of the board
                 if (grid == 3 || grid == 6 || grid == 9)
@@ -185,16 +175,16 @@ namespace SuperSudoku
         /// <summary>
         /// This function is similar to the GetLeftGridItem function, but gets the item above.
         /// </summary>
-        private string GetAboveGridItem(string element)
+        private static string GetAboveGridItem(string element)
         {
-            string ret = element;
+            var ret = element;
 
             if (element.IndexOf('x') != -1 && element.IndexOf('_') == 0)
             {
                 // first chop off the leading underscore and split by x, then put into ints
-                string[] elements = element.Substring(1).Split('x');
-                int grid = Convert.ToInt32(elements[0]);
-                int elem = Convert.ToInt32(elements[1]);
+                var elements = element.Substring(1).Split('x');
+                var grid = Convert.ToInt32(elements[0]);
+                var elem = Convert.ToInt32(elements[1]);
 
                 // if we're on the top of the board
                 if (grid == 1 || grid == 2 || grid == 3)
@@ -233,16 +223,16 @@ namespace SuperSudoku
         /// <summary>
         /// This function is similar to the GetLeftGridItem function, but gets the item below.
         /// </summary>
-        private string GetBelowGridItem(string element)
+        private static string GetBelowGridItem(string element)
         {
-            string ret = element;
+            var ret = element;
 
             if (element.IndexOf('x') != -1 && element.IndexOf('_') == 0)
             {
                 // first chop off the leading underscore and split by x, then put into ints
-                string[] elements = element.Substring(1).Split('x');
-                int grid = Convert.ToInt32(elements[0]);
-                int elem = Convert.ToInt32(elements[1]);
+                var elements = element.Substring(1).Split('x');
+                var grid = Convert.ToInt32(elements[0]);
+                var elem = Convert.ToInt32(elements[1]);
 
                 // if we're on the bottom of the board
                 if (grid == 7 || grid == 8 || grid == 9)
@@ -282,7 +272,7 @@ namespace SuperSudoku
         /// <summary>
         /// This function is called when the exit menu item is clicked.
         /// </summary>
-        private void Exit_Click(object sender, RoutedEventArgs e)
+        private void ExitClick(object sender, RoutedEventArgs e)
         {
             Environment.Exit(0);
         }
@@ -290,65 +280,74 @@ namespace SuperSudoku
         /// <summary>
         /// This function sets the show hints option to on, and is called when the show hints menu item is checked.
         /// </summary>
-        private void AlwaysShowHints_Checked(object sender, RoutedEventArgs e)
+        private void AlwaysShowHintsChecked(object sender, RoutedEventArgs e)
         {
-            showHints = true;
+            ShowHintsOn = true;
         }
 
         /// <summary>
         /// This sets the hints option to off, and is called when the show hints menu item is unchecked.
         /// </summary>
-        private void AlwaysShowHints_Unchecked(object sender, RoutedEventArgs e)
+        private void AlwaysShowHintsUnchecked(object sender, RoutedEventArgs e)
         {
-            showHints = false;
+            ShowHintsOn = false;
         }
 
         /// <summary>
         /// This function sets the show errors option to on and is called when the show errors menu option is checked.
         /// </summary>
-        private void ShowErrors_Checked(object sender, RoutedEventArgs e)
+        private void ShowErrorsChecked(object sender, RoutedEventArgs e)
         {
-            showErrors = true;
+            ShowErrorsOn = true;
         }
 
         /// <summary>
         /// This function sets the show errors option to off and is called when the show errors menu option is unchecked.
         /// </summary>
-        private void ShowErrors_Unchecked(object sender, RoutedEventArgs e)
+        private void ShowErrorsUnchecked(object sender, RoutedEventArgs e)
         {
-            showErrors = false;
+            ShowErrorsOn = false;
         }
 
         /// <summary>
         /// This function is called when the save game menu item is clicked.
         /// </summary>
-        private void SaveGame_Click(object sender, RoutedEventArgs e)
+        private void SaveGameClick(object sender, RoutedEventArgs e)
         {
-            this.SaveFile();
+            SaveFile();
         }
 
         /// <summary>
         /// This function is called when the save game unsolved menu item is clicked.
         /// </summary>
-        private void SaveGameUnsolved_Click(object sender, RoutedEventArgs e)
+        private void SaveGameUnsolvedClick(object sender, RoutedEventArgs e)
         {
-            this.SaveFile(true);
+            SaveFile(true);
         }
 
-        private void GridElement_GotFocus(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// This function is called when a grid element is clicked or gets focused.
+        /// </summary>
+        private void GridElementGotFocus(object sender, RoutedEventArgs e)
         {
-            //((TextBox)sender).Text = "3";
-            ((TextBox)sender).Style = (Style)(this.Resources["GridElementFocused"]);
+            ((TextBox)sender).Style = (Style)(Resources["GridElementFocused"]);
         }
 
-        private void GridElement_LostFocus(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// This function is called when a grid element no longer has focus.
+        /// </summary>
+        private void GridElementLostFocus(object sender, RoutedEventArgs e)
         {
-            ((TextBox)sender).Style = (Style)(this.Resources["GridElement"]);
+            ((TextBox)sender).Style = (Style)(Resources["GridElement"]);
         }
 
-        private void GridElement_KeyDown(object sender, KeyEventArgs e)
+        /// <summary>
+        /// This function is called when a grid item is selected and a key is pressed. It enforces 
+        /// all the rules about how keys can manipulate the game grid.
+        /// </summary>
+        private void GridElementKeyDown(object sender, KeyEventArgs e)
         {
-            string name = ((TextBox)sender).Name;
+            var name = ((TextBox)sender).Name;
 
             switch (e.Key)
             {
@@ -387,25 +386,45 @@ namespace SuperSudoku
                     break;
                 case Key.Left:
                     // Calc left item and set it to be focused
-                    ((TextBox)FindName(GetLeftGridItem(name))).Focus();
+                    var left = (TextBox) FindName(GetLeftGridItem(name));
+                    if (left != null)
+                    {
+                        left.Focus();
+                    }
                     break;
                 case Key.Right:
-                    ((TextBox)FindName(GetRightGridItem(name))).Focus();
+                    var right = (TextBox) FindName(GetRightGridItem(name));
+                    if (right != null)
+                    {
+                        right.Focus();
+                    }
                     break;
                 case Key.Up:
-                    ((TextBox)FindName(GetAboveGridItem(name))).Focus();
+                    var above = (TextBox)FindName(GetAboveGridItem(name));
+                    if (above != null)
+                    {
+                        above.Focus();
+                    }
                     break;
                 case Key.Down:
-                    ((TextBox)FindName(GetBelowGridItem(name))).Focus();
+                    var below = (TextBox)FindName(GetBelowGridItem(name));
+                    if (below != null)
+                    {
+                        below.Focus();
+                    }
                     break;
             }
         }
 
-        private void GridElement_PreviewKeyDown(object sender, KeyEventArgs e)
+        /// <summary>
+        /// This function is also called when buttons are pressed, but supresses some keys like the spacebar. 
+        /// I modified it so that it passes all key signals down to the function above this.
+        /// </summary>
+        private void GridElementPreviewKeyDown(object sender, KeyEventArgs e)
         {
             // We need to send these key presses down the line, otherwise
             // they're blocked by this method.
-            GridElement_KeyDown(sender, e);
+            GridElementKeyDown(sender, e);
         }
     }
 }
