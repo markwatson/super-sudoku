@@ -147,6 +147,49 @@ namespace SuperSudoku
             ((TextBox)sender).Style = (Style)(this.Resources["GridElement"]);
         }
 
+        private void GridElement_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.Key)
+            {
+                case Key.D1:
+                    ((TextBox)sender).Text = "1";
+                    break;
+                case Key.D2:
+                    ((TextBox)sender).Text = "2";
+                    break;
+                case Key.D3:
+                    ((TextBox)sender).Text = "3";
+                    break;
+                case Key.D4:
+                    ((TextBox)sender).Text = "4";
+                    break;
+                case Key.D5:
+                    ((TextBox)sender).Text = "5";
+                    break;
+                case Key.D6:
+                    ((TextBox)sender).Text = "6";
+                    break;
+                case Key.D7:
+                    ((TextBox)sender).Text = "7";
+                    break;
+                case Key.D8:
+                    ((TextBox)sender).Text = "8";
+                    break;
+                case Key.D9:
+                    ((TextBox)sender).Text = "9";
+                    break;
+                case Key.Delete:
+                case Key.Back:
+                case Key.D0:
+                case Key.Space:
+                    ((TextBox)sender).Text = "";
+                    break;
+            }
+        }
 
+        private void GridElement_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            GridElement_KeyDown(sender, e);
+        }
     }
 }
