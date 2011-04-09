@@ -14,12 +14,22 @@ namespace SuperSudoku
         // Game elements are implemented in seperate classes and instantiated to properties of this class here:
         private readonly FileHandler fileHandler;
 
-        // except for game board, which is just an array.
-        public int[][] GameBoard;
+        // game grid size
+	    private const int GameBoardCols = 9;
+        private const int GameBoardRows = 9;
+
+        // except for game board, which is just an array indexed by row, col.
+        private int[,] GameBoard;
 
         // State properties are defined here
         private bool ShowHintsOn;
 	    private bool ShowErrorsOn;
+
+        // helper enum for moving around the grid
+        private enum Direction
+        {
+            Up, Down, Left, Right
+        }
 
         // GUI elements are defined here
         private readonly SaveFileDialog saveGameDialog;
@@ -33,6 +43,8 @@ namespace SuperSudoku
 
             // Initialize game elements
             fileHandler = new FileHandler();
+
+            GameBoard = new int[GameBoardRows, GameBoardCols];
 
 			// Initialize the save game dialog
             saveGameDialog = new SaveFileDialog {Filter = "Sudoku Games | *.sud", DefaultExt = ".sud"};
@@ -71,199 +83,84 @@ namespace SuperSudoku
         }
 
         /// <summary>
-        /// The grid GUI elements are labeled by grid section and grid element. This function
-        /// gets items to the left of a grid element.
+        /// The grid GUI elements are labeled by row and column.
         /// 
-        /// Elements are in the form "_1x1" where the first number is the grid and the second is the element.
+        /// Elements are in the form "_1x1" where the first number is the row and the second is the column.
         /// Returns itself on fail.
-        /// 
-        /// These algorithms follow a very computer sciency way to approach
-        /// the problem: screw math, just brute force it.
         /// </summary>
-        private static string GetLeftGridItem(string element)
+        private static string GetMovedGridItem(string element, Direction direction)
         {
-            string ret = element;
+            var ret = element;
 
-            if (element.IndexOf('x') != -1 && element.IndexOf('_') == 0)
+            var rowCol = GetRowColumnFromTextboxName(element);
+
+            if (rowCol != null)
             {
-                // first chop off the leading underscore and split by x, then put into ints
-                string[] elements = element.Substring(1).Split('x');
-                int grid = Convert.ToInt32(elements[0]);
-                int elem = Convert.ToInt32(elements[1]);
+                var row = rowCol.Item1;
+                var col = rowCol.Item2;
 
-                // if we're on the left side of the board
-                if (grid == 1 || grid == 4 || grid == 7)
+                switch (direction)
                 {
-                    // and if we're not on the left side of the 9x9 grids
-                    if (!(elem == 1 || elem == 4 || elem == 7))
-                    {
-                        // subtract one from the element to move left
-                        elem--;
-                    }
-                }
-                // otherwise if we're in the center or right column of the board
-                else
-                {
-                    // and if we're not on the left side of the 9x9 grids
-                    if (!(elem == 1 || elem == 4 || elem == 7))
-                    {
-                        // subtract one from the element to move left
-                        elem--;
-                    }
-                    // otherwise we are on the left side
-                    else
-                    {
-                        // select the far right box on the column to the left
-                        elem += 2;
-                        grid--;
-                    }
+                    case Direction.Left:
+                        // get the new column if we're not on the left edge
+                        if (col != 1)
+                        {
+                            col -= 1;
+                        }
+                        break;
+                    case Direction.Right:
+                        // if we're not on the right edge
+                        if (col != GameBoardCols)
+                        {
+                            col += 1;
+                        }
+                        break;
+                    case Direction.Up:
+                        // not on the top
+                        if (row != 1)
+                        {
+                            row -= 1;
+                        }
+                        break;
+                    case Direction.Down:
+                        // not on bottom
+                        if (row != GameBoardRows)
+                        {
+                            row += 1;
+                        }
+                        break;
                 }
 
-                ret = String.Format("_{0:d}x{1:d}", grid, elem);
+                ret = String.Format("_{0:d}x{1:d}", row, col);
             }
 
             return ret;
         }
 
         /// <summary>
-        /// This function is similar to the GetLeftGridItem function, but gets the item to the right.
+        /// This takes a textbox name and returns row and column integers.
         /// </summary>
-        private static string GetRightGridItem(string element)
+        /// <param name="textBoxName">The name of the textbox in the format _AxB, where
+        /// A is the row and B is the column.</param>
+        /// <returns>
+        /// A a tuple of two ints in the form of: (Row, Column) if the textBoxName is valid.
+        /// Returns null if the textBoxName is invalid.</returns>
+        private static Tuple<int,int> GetRowColumnFromTextboxName(string textBoxName)
         {
-            var ret = element;
+            Tuple<int,int> ret;
 
-            if (element.IndexOf('x') != -1 && element.IndexOf('_') == 0)
+            if (textBoxName.IndexOf('x') != -1 && textBoxName.IndexOf('_') == 0)
             {
                 // first chop off the leading underscore and split by x, then put into ints
-                var elements = element.Substring(1).Split('x');
-                var grid = Convert.ToInt32(elements[0]);
-                var elem = Convert.ToInt32(elements[1]);
+                var temp = textBoxName.Substring(1).Split('x');
+                var row = Convert.ToInt32(temp[0]);
+                var col = Convert.ToInt32(temp[1]);
 
-                // if we're on the right side of the board
-                if (grid == 3 || grid == 6 || grid == 9)
-                {
-                    // and if we're not on the right side of the 9x9 grids
-                    if (!(elem == 3 || elem == 6 || elem == 9))
-                    {
-                        // subtract one from the element to move left
-                        elem++;
-                    }
-                }
-                // otherwise if we're in the center or left column of the board
-                else
-                {
-                    // and if we're not on the right side of the 9x9 grids
-                    if (!(elem == 3 || elem == 6 || elem == 9))
-                    {
-                        // subtract one from the element to move right
-                        elem++;
-                    }
-                    // otherwise we are on the right side
-                    else
-                    {
-                        // select the far left box on the column to the right
-                        elem -= 2;
-                        grid++;
-                    }
-                }
-
-                ret = String.Format("_{0:d}x{1:d}", grid, elem);
+                ret = Tuple.Create(row, col);
             }
-
-            return ret;
-        }
-
-        /// <summary>
-        /// This function is similar to the GetLeftGridItem function, but gets the item above.
-        /// </summary>
-        private static string GetAboveGridItem(string element)
-        {
-            var ret = element;
-
-            if (element.IndexOf('x') != -1 && element.IndexOf('_') == 0)
+            else
             {
-                // first chop off the leading underscore and split by x, then put into ints
-                var elements = element.Substring(1).Split('x');
-                var grid = Convert.ToInt32(elements[0]);
-                var elem = Convert.ToInt32(elements[1]);
-
-                // if we're on the top of the board
-                if (grid == 1 || grid == 2 || grid == 3)
-                {
-                    // and if we're not on the very top of the 9x9 grids
-                    if (!(elem == 1 || elem == 2 || elem == 3))
-                    {
-                        // subtract 3 from the element to move up
-                        elem -= 3;
-                    }
-                }
-                // otherwise if we're in the center or bottom column of the board
-                else
-                {
-                    // and if we're not on the top of the 9x9 grids
-                    if (!(elem == 1 || elem == 2 || elem == 3))
-                    {
-                        // subtract three from the element to move up
-                        elem -= 3;
-                    }
-                    // otherwise we are on the top
-                    else
-                    {
-                        // select the bottom box on the column above
-                        elem += 6;
-                        grid -= 3;
-                    }
-                }
-
-                ret = String.Format("_{0:d}x{1:d}", grid, elem);
-            }
-
-            return ret;
-        }
-
-        /// <summary>
-        /// This function is similar to the GetLeftGridItem function, but gets the item below.
-        /// </summary>
-        private static string GetBelowGridItem(string element)
-        {
-            var ret = element;
-
-            if (element.IndexOf('x') != -1 && element.IndexOf('_') == 0)
-            {
-                // first chop off the leading underscore and split by x, then put into ints
-                var elements = element.Substring(1).Split('x');
-                var grid = Convert.ToInt32(elements[0]);
-                var elem = Convert.ToInt32(elements[1]);
-
-                // if we're on the bottom of the board
-                if (grid == 7 || grid == 8 || grid == 9)
-                {
-                    // and if we're not on the very bottom of the 9x9 grids
-                    if (!(elem == 7 || elem == 8 || elem == 9))
-                    {
-                        // add 3 to the element to move down
-                        elem += 3;
-                    }
-                }
-                // otherwise if we're in the center or top column of the board
-                else
-                {
-                    // and if we're not on the bottom of the 9x9 grids
-                    if (!(elem == 7 || elem == 8 || elem == 9))
-                    {
-                        // add three from the element to move down
-                        elem += 3;
-                    }
-                    // otherwise we are on the bottom
-                    else
-                    {
-                        // select the top box on the column below
-                        elem -= 6;
-                        grid += 3;
-                    }
-                }
-
-                ret = String.Format("_{0:d}x{1:d}", grid, elem);
+                ret = null;
             }
 
             return ret;
@@ -350,34 +247,47 @@ namespace SuperSudoku
         {
             var name = ((TextBox)sender).Name;
 
+            // get the row/column of the text box
+            var rowCol = GetRowColumnFromTextboxName(name);
+
             switch (e.Key)
             {
+                    // When we're setting the boxes we also keep the game grid up to date.
                 case Key.D1:
                     ((TextBox)sender).Text = "1";
+                    GameBoard[rowCol.Item1, rowCol.Item2] = 1;
                     break;
                 case Key.D2:
                     ((TextBox)sender).Text = "2";
+                    GameBoard[rowCol.Item1, rowCol.Item2] = 2;
                     break;
                 case Key.D3:
                     ((TextBox)sender).Text = "3";
+                    GameBoard[rowCol.Item1, rowCol.Item2] = 3;
                     break;
                 case Key.D4:
                     ((TextBox)sender).Text = "4";
+                    GameBoard[rowCol.Item1, rowCol.Item2] = 4;
                     break;
                 case Key.D5:
                     ((TextBox)sender).Text = "5";
+                    GameBoard[rowCol.Item1, rowCol.Item2] = 5;
                     break;
                 case Key.D6:
                     ((TextBox)sender).Text = "6";
+                    GameBoard[rowCol.Item1, rowCol.Item2] = 6;
                     break;
                 case Key.D7:
                     ((TextBox)sender).Text = "7";
+                    GameBoard[rowCol.Item1, rowCol.Item2] = 7;
                     break;
                 case Key.D8:
                     ((TextBox)sender).Text = "8";
+                    GameBoard[rowCol.Item1, rowCol.Item2] = 8;
                     break;
                 case Key.D9:
                     ((TextBox)sender).Text = "9";
+                    GameBoard[rowCol.Item1, rowCol.Item2] = 9;
                     break;
                 case Key.Delete:
                 case Key.Back:
@@ -387,28 +297,28 @@ namespace SuperSudoku
                     break;
                 case Key.Left:
                     // Calc left item and set it to be focused
-                    var left = (TextBox) FindName(GetLeftGridItem(name));
+                    var left = (TextBox) FindName(GetMovedGridItem(name, Direction.Left));
                     if (left != null)
                     {
                         left.Focus();
                     }
                     break;
                 case Key.Right:
-                    var right = (TextBox) FindName(GetRightGridItem(name));
+                    var right = (TextBox) FindName(GetMovedGridItem(name, Direction.Right));
                     if (right != null)
                     {
                         right.Focus();
                     }
                     break;
                 case Key.Up:
-                    var above = (TextBox)FindName(GetAboveGridItem(name));
+                    var above = (TextBox) FindName(GetMovedGridItem(name, Direction.Up));
                     if (above != null)
                     {
                         above.Focus();
                     }
                     break;
                 case Key.Down:
-                    var below = (TextBox)FindName(GetBelowGridItem(name));
+                    var below = (TextBox) FindName(GetMovedGridItem(name, Direction.Down));
                     if (below != null)
                     {
                         below.Focus();
