@@ -13,17 +13,19 @@ namespace SuperSudoku
 	{
         // Game elements are implemented in seperate classes and instantiated to properties of this class here:
         private readonly FileHandler fileHandler;
+	    private readonly PuzzleSolver puzzleSolver;
+	    private readonly PuzzleGenerator puzzleGenerator;
 
         // game grid size
 	    private const int GameBoardCols = 9;
         private const int GameBoardRows = 9;
 
         // except for game board, which is just an array indexed by row, col.
-        private int[,] GameBoard;
+        private readonly int[,] gameBoard;
 
         // State properties are defined here
-        private bool ShowHintsOn;
-	    private bool ShowErrorsOn;
+        private bool showHintsOn;
+	    private bool showErrorsOn;
 
         // helper enum for moving around the grid
         private enum Direction
@@ -43,8 +45,10 @@ namespace SuperSudoku
 
             // Initialize game elements
             fileHandler = new FileHandler();
+            puzzleSolver = new PuzzleSolver();
+            puzzleGenerator = new PuzzleGenerator(puzzleSolver);
 
-            GameBoard = new int[GameBoardRows, GameBoardCols];
+            gameBoard = new int[GameBoardRows, GameBoardCols];
 
 			// Initialize the save game dialog
             saveGameDialog = new SaveFileDialog {Filter = "Sudoku Games | *.sud", DefaultExt = ".sud"};
@@ -68,11 +72,11 @@ namespace SuperSudoku
                 bool success;
                 if (!saveUnsolved)
                 {
-                    success = fileHandler.SaveFile(GameBoard, fileName);
+                    success = fileHandler.SaveFile(gameBoard, fileName);
                 }
                 else
                 {
-                    success = fileHandler.SaveFileUnsolved(GameBoard, fileName);
+                    success = fileHandler.SaveFileUnsolved(gameBoard, fileName);
                 }
 
                 if (!success)
@@ -180,7 +184,7 @@ namespace SuperSudoku
         /// </summary>
         private void AlwaysShowHintsChecked(object sender, RoutedEventArgs e)
         {
-            ShowHintsOn = true;
+            showHintsOn = true;
         }
 
         /// <summary>
@@ -188,7 +192,7 @@ namespace SuperSudoku
         /// </summary>
         private void AlwaysShowHintsUnchecked(object sender, RoutedEventArgs e)
         {
-            ShowHintsOn = false;
+            showHintsOn = false;
         }
 
         /// <summary>
@@ -196,7 +200,7 @@ namespace SuperSudoku
         /// </summary>
         private void ShowErrorsChecked(object sender, RoutedEventArgs e)
         {
-            ShowErrorsOn = true;
+            showErrorsOn = true;
         }
 
         /// <summary>
@@ -204,7 +208,7 @@ namespace SuperSudoku
         /// </summary>
         private void ShowErrorsUnchecked(object sender, RoutedEventArgs e)
         {
-            ShowErrorsOn = false;
+            showErrorsOn = false;
         }
 
         /// <summary>
@@ -255,39 +259,39 @@ namespace SuperSudoku
                     // When we're setting the boxes we also keep the game grid up to date.
                 case Key.D1:
                     ((TextBox)sender).Text = "1";
-                    GameBoard[rowCol.Item1, rowCol.Item2] = 1;
+                    gameBoard[rowCol.Item1, rowCol.Item2] = 1;
                     break;
                 case Key.D2:
                     ((TextBox)sender).Text = "2";
-                    GameBoard[rowCol.Item1, rowCol.Item2] = 2;
+                    gameBoard[rowCol.Item1, rowCol.Item2] = 2;
                     break;
                 case Key.D3:
                     ((TextBox)sender).Text = "3";
-                    GameBoard[rowCol.Item1, rowCol.Item2] = 3;
+                    gameBoard[rowCol.Item1, rowCol.Item2] = 3;
                     break;
                 case Key.D4:
                     ((TextBox)sender).Text = "4";
-                    GameBoard[rowCol.Item1, rowCol.Item2] = 4;
+                    gameBoard[rowCol.Item1, rowCol.Item2] = 4;
                     break;
                 case Key.D5:
                     ((TextBox)sender).Text = "5";
-                    GameBoard[rowCol.Item1, rowCol.Item2] = 5;
+                    gameBoard[rowCol.Item1, rowCol.Item2] = 5;
                     break;
                 case Key.D6:
                     ((TextBox)sender).Text = "6";
-                    GameBoard[rowCol.Item1, rowCol.Item2] = 6;
+                    gameBoard[rowCol.Item1, rowCol.Item2] = 6;
                     break;
                 case Key.D7:
                     ((TextBox)sender).Text = "7";
-                    GameBoard[rowCol.Item1, rowCol.Item2] = 7;
+                    gameBoard[rowCol.Item1, rowCol.Item2] = 7;
                     break;
                 case Key.D8:
                     ((TextBox)sender).Text = "8";
-                    GameBoard[rowCol.Item1, rowCol.Item2] = 8;
+                    gameBoard[rowCol.Item1, rowCol.Item2] = 8;
                     break;
                 case Key.D9:
                     ((TextBox)sender).Text = "9";
-                    GameBoard[rowCol.Item1, rowCol.Item2] = 9;
+                    gameBoard[rowCol.Item1, rowCol.Item2] = 9;
                     break;
                 case Key.Delete:
                 case Key.Back:

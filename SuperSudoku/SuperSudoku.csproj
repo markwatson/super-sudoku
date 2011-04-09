@@ -64,6 +64,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="PuzzleSolver.cs" />
+    <Compile Include="PuzzleGenerator.cs" />
     <Compile Include="FileHandler.cs" />
     <Compile Include="UserInterface.xaml.cs">
       <DependentUpon>UserInterface.xaml</DependentUpon>
