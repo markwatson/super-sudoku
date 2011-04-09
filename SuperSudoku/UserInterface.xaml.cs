@@ -9,15 +9,17 @@ namespace SuperSudoku
 	/// <summary>
 	/// GUI Logic goes in this MainWindow class. It also contains the state of the application.
 	/// </summary>
-	public partial class MainWindow
+	public partial class UserInterface
 	{
         // Game elements are implemented in seperate classes and instantiated to properties of this class here:
         private readonly FileHandler fileHandler;
-        private readonly GameBoard gameBoard;
+
+        // except for game board, which is just an array.
+        public int[][] GameBoard;
 
         // State properties are defined here
         private bool ShowHintsOn;
-        private bool ShowErrorsOn;
+	    private bool ShowErrorsOn;
 
         // GUI elements are defined here
         private readonly SaveFileDialog saveGameDialog;
@@ -25,13 +27,12 @@ namespace SuperSudoku
         /// <summary>
         /// This function instantiates all the game objects and sets up the game window.
         /// </summary>
-		public MainWindow()
+		public UserInterface()
 		{
 			InitializeComponent();
 
             // Initialize game elements
             fileHandler = new FileHandler();
-            gameBoard = new GameBoard();
 
 			// Initialize the save game dialog
             saveGameDialog = new SaveFileDialog {Filter = "Sudoku Games | *.sud", DefaultExt = ".sud"};
@@ -55,11 +56,11 @@ namespace SuperSudoku
                 bool success;
                 if (!saveUnsolved)
                 {
-                    success = fileHandler.SaveFile(gameBoard, fileName);
+                    success = fileHandler.SaveFile(GameBoard, fileName);
                 }
                 else
                 {
-                    success = fileHandler.SaveFileUnsolved(gameBoard, fileName);
+                    success = fileHandler.SaveFileUnsolved(GameBoard, fileName);
                 }
 
                 if (!success)
