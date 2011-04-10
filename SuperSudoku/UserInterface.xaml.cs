@@ -100,8 +100,8 @@ namespace SuperSudoku
 
             if (rowCol != null)
             {
-                var row = rowCol.Item1;
-                var col = rowCol.Item2;
+                var row = rowCol.Item1+1; // plus one because they're 0 indexed.
+                var col = rowCol.Item2+1;
 
                 switch (direction)
                 {
@@ -157,8 +157,8 @@ namespace SuperSudoku
             {
                 // first chop off the leading underscore and split by x, then put into ints
                 var temp = textBoxName.Substring(1).Split('x');
-                var row = Convert.ToInt32(temp[0]);
-                var col = Convert.ToInt32(temp[1]);
+                var row = Convert.ToInt32(temp[0]) - 1; // minus 1 because we want them to be 0 indexed.
+                var col = Convert.ToInt32(temp[1]) - 1;
 
                 ret = Tuple.Create(row, col);
             }
@@ -298,6 +298,7 @@ namespace SuperSudoku
                 case Key.D0:
                 case Key.Space:
                     ((TextBox)sender).Text = "";
+                    gameBoard[rowCol.Item1, rowCol.Item2] = 0;
                     break;
                 case Key.Left:
                     // Calc left item and set it to be focused
