@@ -32,7 +32,7 @@ public class PuzzleGrid : ICloneable
 	}
 	
 	
-	int UserSetCell(rowA,columnB,value)
+	public int UserSetCell(int rowA, int columnB, int value)
 	{
 		int success = 0;
 		bool validIndex = false;
@@ -62,7 +62,7 @@ public class PuzzleGrid : ICloneable
 		return(success);
 	}
 	
-	int GetCell(rowA, columnB)
+	public int GetCell(int rowA, int columnB)
 	{                                   //return cell value for comparisons etc
 		if((indexRange.Contains(rowA)) && (indexRange.Contains(columnB)))
 			return(grid[rowA,columnB]);

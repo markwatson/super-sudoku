@@ -11,13 +11,16 @@ namespace SuperSudoku
         /// Constructs a puzzle solver class.
         /// </summary>
 
-        List<int>[,] possValues;  //Matrix of lists holding possible values
-        PuzzleGrid puzzle;
+        List<int>[ , ] possValues;  //Matrix of lists holding possible values
+        int numSolns;
+        bool foundSoln;
+        bool isSolved = false;
+        bool stopLooking = false;
 
 
-        public PuzzleSolver(PuzzleGrid puzz)
+        public PuzzleSolver()
         {
-            puzzle = puzz;
+            
         }
 
         /// <summary>
@@ -27,13 +30,16 @@ namespace SuperSudoku
         /// 
         /// r == row; c == column;
         /// </summary>
-        private void PopulatePossibleValues(int r, int c)
+        private void PopulatePossibleValues(int r, int c, PuzzleGrid puzzle)
         {
             int[] foundValues = new int[10]; //holds values found, 0 == empty
             int cLoc; //location in 3x3 subgrid column
             int rLoc; //location in 3x3 subgrid column
+            possValues = new List<int>[9,9];
             cLoc = c % 3; //0 == left, 1 == center, 2 == right
             rLoc = r % 3; //0 == top, 1 == center, 2 == bottom
+
+            #region CHECK 3X3 GRID VALUES
 
             #region SPECIAL CASES: CORNERS
             ///Deal with special cases: [r, c] is a corner, either of 9x9
@@ -62,7 +68,7 @@ namespace SuperSudoku
                 }
             }
 
-            else if (r == 0 && c == 8) //Top-right corner
+            else if (r == 0 && c == 8 || rLoc == 0 && cLoc == 2) //Top-right
             {
                 ///Check (r, c) through (r + 2, c + 2)
                 for (int i = r; i < r + 3; i++)
@@ -74,7 +80,7 @@ namespace SuperSudoku
                 }
             }
 
-            else if (r == 8 && c == 8) //bottom right corner
+            else if (r == 8 && c == 8 || rLoc == 2 && cLoc == 2) //bottom right
             {
                 ///Check (r, c) through (r - 2, c - 2)
                 for (int i = r; i > r - 3; i--)
@@ -91,11 +97,157 @@ namespace SuperSudoku
             //'else' is carry through from SPECIAL CASES: CORNERS
             else if (r == 0) //top side
             {
-                
+                for (int i = r; i < r + 3; i++)
+                {
+                    for (int j = c - 1; j < c + 2; j++)
+                    {
+                        foundValues[puzzle.GetCell(i, j)] = puzzle.GetCell(i, j);
+                    }
+                }
+            }
 
+            else if (r == 8) //bottom side
+            {
+                for (int i = r; i > r - 3; i--)
+                {
+                    for (int j = c - 1; j < c + 2; j++)
+                    {
+                        foundValues[puzzle.GetCell(i, j)] = puzzle.GetCell(i, j);
+                    }
+                }
+            }
+
+            else if (c == 0) //left side
+            {
+                for (int i = r - 1; i < r + 2; i++)
+                {
+                    for (int j = c; j < c + 3; j++)
+                    {
+                        foundValues[puzzle.GetCell(i, j)] = puzzle.GetCell(i, j);
+                    }
+                }
+            }
+
+            else if (c == 8) //right side
+            {
+                for (int i = r - 1; i < r + 2; i++)
+                {
+                    for (int j = c; j > c - 3; j--)
+                    {
+                        foundValues[puzzle.GetCell(i, j)] = puzzle.GetCell(i, j);
+                    }
+                }
             }
 
             #endregion
+
+            else //center of 3x3 grid
+            {
+                for (int i = r - 1; i < r + 2; i++)
+                {
+                    for (int j = c; j > c - 3; j--)
+                    {
+                        foundValues[puzzle.GetCell(i, j)] = puzzle.GetCell(i, j);
+                    }
+                }
+            }
+
+            #endregion
+
+            ///Check row for given values
+            for (int i = 0; i < 9; i++)
+            {
+                foundValues[puzzle.GetCell(r, i)] = puzzle.GetCell(r, i);
+            }
+
+            ///Check column for given values
+            for (int i = 0; i < 9; i++)
+            {
+                foundValues[puzzle.GetCell(i, c)] = puzzle.GetCell(i, c);
+            }
+
+            //Populate lists with values
+            for (int i = 1; i < 9; i++)
+            {
+                ///Iterate through foundValues, where the value held in 
+                ///foundValues[i] will indicate that value has been found.
+                ///If array slot is empty, value was not found and is 
+                ///possible value for the empty slot. Because the found value
+                ///array utilizes natural indexing, i == the value 1 - 9. If
+                ///[i] is null, the possible value for the empty cell is i.
+                if (foundValues[i] == null)
+                {
+                    possValues[r, c].Add(i);
+                }
+            }
+        }
+
+        private PuzzleGrid FillSingleChoices(PuzzleGrid puzzle)
+        {
+            bool replacementMade = false;
+            int value;
+            for (int i = 0; i < 9; i++)
+            {
+                for (int j = 0; j < 9; j++)
+                {
+                    if (possValues[i,j].Count == 1) //If only 1 possible value
+                    {
+                        value = possValues[i, j].Max();
+                        puzzle.UserSetCell(i, j, value);
+                        replacementMade = true;
+                    }
+                }
+            }
+
+            if (replacementMade == true)
+            {
+                for (int i = 0; i < 9; i++)
+                {
+                    for (int j = 0; j < 9; j++)
+                    {
+                        PopulatePossibleValues(i, j, puzzle); //Repopulate new values
+                    }
+                }
+                ///Check for empty locations which now have only 1 available
+                ///slot. I.e. Had two possible values before filling in 
+                ///single choices, and after a 1-value slot was set, now only
+                ///has 1 choice available.
+                puzzle = FillSingleChoices(puzzle);
+            }
+
+            return puzzle;
+        }
+
+        private bool IsSolved(PuzzleGrid puzzle)
+        {
+            return isSolved;
+        }
+
+        private void FindFewestChoices()
+        {
+
+        }
+
+        public bool SolveGrid(PuzzleGrid puzzle)
+        {
+            #region Populate Possible values for all empty (0) locations
+            for (int i = 0; i < 9; i++)
+            {
+                for (int j = 0; j < 9; j++)
+                {
+                    if (puzzle.GetCell(i, j) == 0)
+                    {
+                        PopulatePossibleValues(i, j, puzzle);
+                    }
+                }
+            }
+            #endregion
+
+            #region Set "isSolved" boolean if all squares are filled
+
+            #endregion
+
+            return foundSoln;
         }
 
 
