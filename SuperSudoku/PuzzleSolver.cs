@@ -11,11 +11,13 @@ namespace SuperSudoku
         /// Constructs a puzzle solver class.
         /// </summary>
 
-        List<int>[ , ] possValues;  //Matrix of lists holding possible values
+        List<int>[,] possValues;  //Matrix of lists holding possible values
         int numSolns;
         bool foundSoln;
         bool isSolved = false;
         bool stopLooking = false;
+        PuzzleGrid solutionGrid;
+        Random rng = new Random();
 
 
         public PuzzleSolver()
@@ -220,12 +222,58 @@ namespace SuperSudoku
 
         private bool IsSolved(PuzzleGrid puzzle)
         {
+            isSolved = true; //Assume no blank squares
+            for (int i = 0; i < 9; i++)
+            {
+                for (int j = 0; j < 9; j++)
+                {
+                    if (puzzle.GetCell(i, j) == 0)
+                    {
+                        isSolved = false; //Empty cell found, not solved
+                    }
+                }
+            }
             return isSolved;
         }
 
-        private void FindFewestChoices()
+        private int[] FindFewestChoices(PuzzleGrid puzzle)
         {
+            int[] location = new int[2]; //returns [r,c] of fewest choices
+            int r = -1; //row of location with fewest choices
+            int c = -1; //row of location with fewest choices
+            int minChoices = 9; //current lowest number of choices available
 
+            for (int i = 0; i < 9; i++)
+            {
+                for (int j = 0; j < 9; j++)
+                {
+                    if (puzzle.GetCell(i, j) == 0) //If blank cell
+                    {
+                        if (possValues[i,j].Count < minChoices)
+                        {
+                            minChoices = possValues[i, j].Count;
+                            r = i; //save location
+                            c = j;
+                        }
+                    }
+                }
+            }
+            if (minChoices == 0) //If location has no possible values
+            {
+                r = -1; //save invalid location
+                c = -1;
+            }
+            location[0] = r;
+            location[1] = c;
+
+            return location;
+        }
+
+        private int PickOneTrue(int r, int c)
+        {
+            int possible = possValues[r, c].Count;
+            int choice = rng.Next(0, possible);
+            return choice;
         }
 
         public bool SolveGrid(PuzzleGrid puzzle)
@@ -243,9 +291,58 @@ namespace SuperSudoku
             }
             #endregion
 
-            #region Set "isSolved" boolean if all squares are filled
+            FillSingleChoices(puzzle);
 
-            #endregion
+            if (IsSolved(puzzle) == true)
+            {
+                if (numSolns > 0)
+                {
+                    stopLooking = true;
+                    foundSoln = false;
+                }
+                else
+                {
+                    numSolns++;
+                    solutionGrid = puzzle;
+                    foundSoln = true;
+                }
+            }
+            else
+            {
+                int[] location = FindFewestChoices(puzzle);
+                int r = location[0]; //set row of fewest choices
+                int c = location[1]; //set column of fewest choices
+                if (r == -1 || c == -1) //If location is an invalid entry
+                {
+                    foundSoln = false;
+                }
+                else
+                {
+                    int numChoices = possValues[r, c].Count;
+                    int i = 1;
+                    bool done = false;
+                    
+                    while (!done && i <= numChoices)
+                    {
+                        int choice = PickOneTrue(r, c);
+                        int value = possValues[r, c].ElementAt(choice);
+                        possValues[r, c].RemoveAt(choice); //remove from  poss
+                        puzzle.UserSetCell(r, c, value);
+                        isSolved = IsSolved(puzzle);
+
+                        if (stopLooking == true)
+                        {
+                            done = true;
+                            foundSoln = false;
+                        }
+                        else
+                        {
+                            foundSoln = IsSolved(puzzle);
+                            i++;
+                        }
+                    }
+                }
+            }
 
             return foundSoln;
         }
