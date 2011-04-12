@@ -10,7 +10,7 @@ namespace SuperSudoku
         /// <summary>
         /// This function saves a full game.
         /// </summary>
-        public bool SaveFile(int[,] gameBoard, String fileName)
+        public bool SaveFile(PuzzleGrid gameBoard, String fileName)
         {
             return true;
         }
@@ -18,7 +18,7 @@ namespace SuperSudoku
         /// <summary>
         /// This function saves just the part of the game file without any use edits applied.
         /// </summary>
-        public bool SaveFileUnsolved(int[,] gameBoard, String fileName)
+        public bool SaveFileUnsolved(PuzzleGrid gameBoard, String fileName)
         {
             return true;
         }

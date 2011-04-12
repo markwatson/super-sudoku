@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -16,13 +15,11 @@ namespace SuperSudoku
         private readonly FileHandler fileHandler;
 	    private readonly PuzzleSolver puzzleSolver;
 	    private readonly PuzzleGenerator puzzleGenerator;
+	    private readonly PuzzleGrid puzzleGrid;
 
         // game grid size
 	    private const int GameBoardCols = 9;
         private const int GameBoardRows = 9;
-
-        // except for game board, which is just an array indexed by row, col.
-        private readonly int[,] gameBoard;
 
         // State properties are defined here
         private bool showHintsOn;
@@ -48,8 +45,7 @@ namespace SuperSudoku
             fileHandler = new FileHandler();
             puzzleSolver = new PuzzleSolver();
             puzzleGenerator = new PuzzleGenerator(puzzleSolver);
-
-            gameBoard = new int[GameBoardRows, GameBoardCols];
+            puzzleGrid = new PuzzleGrid();
 
 			// Initialize the save game dialog
             saveGameDialog = new SaveFileDialog {Filter = "Sudoku Games | *.sud", DefaultExt = ".sud"};
@@ -73,11 +69,11 @@ namespace SuperSudoku
                 bool success;
                 if (!saveUnsolved)
                 {
-                    success = fileHandler.SaveFile(gameBoard, fileName);
+                    success = fileHandler.SaveFile(puzzleGrid, fileName);
                 }
                 else
                 {
-                    success = fileHandler.SaveFileUnsolved(gameBoard, fileName);
+                    success = fileHandler.SaveFileUnsolved(puzzleGrid, fileName);
                 }
 
                 if (!success)
@@ -136,7 +132,7 @@ namespace SuperSudoku
                         break;
                 }
 
-                ret = String.Format("_{0:d}x{1:d}", row, col);
+                ret = GetTextBoxNameFromRowColumn(row, col);
             }
 
             return ret;
@@ -169,6 +165,38 @@ namespace SuperSudoku
             }
 
             return ret;
+        }
+
+        /// <summary>
+        /// This functions does the opposite of the function above; it gets a text box name string given a 
+        /// row and a column.
+        /// </summary>
+        /// <param name="row">Row of the cell.</param>
+        /// <param name="col">Column of the cell.</param>
+        /// <returns>A string containing the textbox name.</returns>
+        private static string GetTextBoxNameFromRowColumn(int row, int col)
+        {
+            return String.Format("_{0:d}x{1:d}", row, col);
+        }
+
+        /// <summary>
+        /// This function takes a PuzzleGrid and updates the game board values to the values in the PuzzleGrid.
+        /// </summary>
+        /// <param name="grid">The puzzle gird.</param>
+        private void SetPuzzleGrid(PuzzleGrid grid)
+        {
+            for (int i = 0; i < GameBoardRows; i++)
+            {
+                for (int j = 0; j < GameBoardCols; j++)
+                {
+                    var box = (TextBox) FindName(GetTextBoxNameFromRowColumn(i, j));
+                    if (box != null)
+                    {
+                        box.Text = grid.Grid[i, j].ToString();
+                    }
+                    
+                }
+            }
         }
 
         // The following methods are GUI event handlers. The two arguments are the same for all event handlers.
@@ -260,46 +288,46 @@ namespace SuperSudoku
                     // When we're setting the boxes we also keep the game grid up to date.
                 case Key.D1:
                     ((TextBox)sender).Text = "1";
-                    gameBoard[rowCol.Item1, rowCol.Item2] = 1;
+                    puzzleGrid.InitSetCell(rowCol.Item1, rowCol.Item2, 1);
                     break;
                 case Key.D2:
                     ((TextBox)sender).Text = "2";
-                    gameBoard[rowCol.Item1, rowCol.Item2] = 2;
+                    puzzleGrid.InitSetCell(rowCol.Item1, rowCol.Item2, 2);
                     break;
                 case Key.D3:
                     ((TextBox)sender).Text = "3";
-                    gameBoard[rowCol.Item1, rowCol.Item2] = 3;
+                    puzzleGrid.InitSetCell(rowCol.Item1, rowCol.Item2, 3);
                     break;
                 case Key.D4:
                     ((TextBox)sender).Text = "4";
-                    gameBoard[rowCol.Item1, rowCol.Item2] = 4;
+                    puzzleGrid.InitSetCell(rowCol.Item1, rowCol.Item2, 4);
                     break;
                 case Key.D5:
                     ((TextBox)sender).Text = "5";
-                    gameBoard[rowCol.Item1, rowCol.Item2] = 5;
+                    puzzleGrid.InitSetCell(rowCol.Item1, rowCol.Item2, 5);
                     break;
                 case Key.D6:
                     ((TextBox)sender).Text = "6";
-                    gameBoard[rowCol.Item1, rowCol.Item2] = 6;
+                    puzzleGrid.InitSetCell(rowCol.Item1, rowCol.Item2, 6);
                     break;
                 case Key.D7:
                     ((TextBox)sender).Text = "7";
-                    gameBoard[rowCol.Item1, rowCol.Item2] = 7;
+                    puzzleGrid.InitSetCell(rowCol.Item1, rowCol.Item2, 7);
                     break;
                 case Key.D8:
                     ((TextBox)sender).Text = "8";
-                    gameBoard[rowCol.Item1, rowCol.Item2] = 8;
+                    puzzleGrid.InitSetCell(rowCol.Item1, rowCol.Item2, 8);
                     break;
                 case Key.D9:
                     ((TextBox)sender).Text = "9";
-                    gameBoard[rowCol.Item1, rowCol.Item2] = 9;
+                    puzzleGrid.InitSetCell(rowCol.Item1, rowCol.Item2, 9);
                     break;
                 case Key.Delete:
                 case Key.Back:
                 case Key.D0:
                 case Key.Space:
                     ((TextBox)sender).Text = "";
-                    gameBoard[rowCol.Item1, rowCol.Item2] = 0;
+                    puzzleGrid.InitSetCell(rowCol.Item1, rowCol.Item2, 0);
                     break;
                 case Key.Left:
                     // Calc left item and set it to be focused
@@ -342,6 +370,22 @@ namespace SuperSudoku
             // We need to send these key presses down the line, otherwise
             // they're blocked by this method.
             GridElementKeyDown(sender, e);
+        }
+
+        /// <summary>
+        /// This function is called when we need to solve the puzzle.
+        /// </summary>
+        private void SolveNowClick(object sender, RoutedEventArgs e)
+        {
+            var result = puzzleSolver.SolveGrid(puzzleGrid);
+            if (result)
+            {
+                SetPuzzleGrid(puzzleSolver.SolutionGrid);
+            }
+            else
+            {
+                MessageBox.Show("The current puzzle cannot be solved.");
+            }
         }
     }
 }

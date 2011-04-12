@@ -248,6 +248,6 @@
 		</Menu>
 		<TextBlock Margin="8,0,95.873,25.76" TextWrapping="Wrap" VerticalAlignment="Bottom" Text="Hints are currently turned off. You can turn them on from the options menu." Height="32.96"/>
 		<TextBlock HorizontalAlignment="Left" Margin="8,0,0,62.72" TextWrapping="Wrap" VerticalAlignment="Bottom" FontWeight="Bold" FontSize="16" Text="Hint"/>
-		<Button Content="Solve Now" HorizontalAlignment="Right" Margin="0,0,8,25.76" VerticalAlignment="Bottom" Width="75" IsEnabled="False"/>
+		<Button Content="Solve Now" HorizontalAlignment="Right" Margin="0,0,8,25.76" VerticalAlignment="Bottom" Width="75" IsEnabled="True" Name="SolveNow" Click="SolveNowClick" />
 	</Grid>
 </Window>

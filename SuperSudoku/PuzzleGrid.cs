@@ -6,8 +6,24 @@ namespace SuperSudoku
 {
     public class PuzzleGrid : ICloneable
     {
-        private int[,] grid = new int[9, 9]; //Uses 9x9 intArray to store values of puzzle
-        private List<int> indexRange = new List<int>(Enumerable.Range(0, 8)); //possible indices
+        /// <summary>
+        /// This is the internal grid element.
+        /// Reading of the private grid element is allowed. Setting it is not allowed.
+        /// </summary>
+        public int[,] Grid { get; private set; }
+
+        /// <summary>
+        /// possible indices
+        /// </summary>
+        private List<int> indexRange = new List<int>(Enumerable.Range(0, 8));
+
+        /// <summary>
+        /// This constructor creates the grid.
+        /// </summary>
+        public PuzzleGrid()
+        {
+            Grid = new int[9,9];
+        }
 
         public int InitSetCell(int rowA, int columnB, int value)
         {
@@ -26,7 +42,7 @@ namespace SuperSudoku
                 validNewVal = false;
             if (validIndex && validNewVal)
             {
-                grid[rowA, columnB] = value;
+                Grid[rowA, columnB] = value;
                 success = 1;
             }
             else
@@ -51,13 +67,13 @@ namespace SuperSudoku
                 validNewVal = true;            //confirm new value is in range 0..9
             else
                 validNewVal = false;
-            if (grid[rowA, columnB] >= 0)
+            if (Grid[rowA, columnB] >= 0)
                 canReplace = true;       //confirm value in location is replaceable
             else
                 canReplace = false;
             if (validIndex && validNewVal && canReplace)
             {
-                grid[rowA, columnB] = value;
+                Grid[rowA, columnB] = value;
                 success = 1;
             }
             else
@@ -68,7 +84,7 @@ namespace SuperSudoku
         public int GetCell(int rowA, int columnB)
         {                                   //return cell value for comparisons etc
             if ((indexRange.Contains(rowA)) && (indexRange.Contains(columnB)))
-                return (grid[rowA, columnB]);
+                return (Grid[rowA, columnB]);
             else
                 return (0);
         }
@@ -76,7 +92,7 @@ namespace SuperSudoku
         public object Clone()
         {                           //enable cloning for safe copying of the object
             PuzzleGrid p = new PuzzleGrid();
-            p.grid = this.grid;
+            p.Grid = this.Grid;
             return p;
         }
     }
