@@ -15,7 +15,7 @@ namespace SuperSudoku
         private readonly FileHandler fileHandler;
 	    private readonly PuzzleSolver puzzleSolver;
 	    private readonly PuzzleGenerator puzzleGenerator;
-	    private readonly PuzzleGrid puzzleGrid;
+	    private PuzzleGrid puzzleGrid;
 
         // game grid size
 	    private const int GameBoardCols = 9;
@@ -259,6 +259,31 @@ namespace SuperSudoku
             }
         }
 
+        /// <summary>
+        /// Checks if the game is in progress.
+        /// </summary>
+        /// <returns>True if a user editable field has a value in it, false otherwise.</returns>
+        private bool GameInProgress()
+        {
+            var sum = 0;
+            for (int i = 0; i < GameBoardRows; i++)
+            {
+                for (int j = 0; j < GameBoardCols; j++)
+                {
+                    sum += puzzleGrid.Grid[i, j];
+                }
+            }
+
+            // if the sum is greater than 0 that means there is a user editable value
+            var inProgress = false;
+            if (sum > 0)
+            {
+                inProgress = true;
+            }
+
+            return inProgress;
+        }
+
         // The following methods are GUI event handlers. The two arguments are the same for all event handlers.
         /// <summary>
         /// This function is called when the exit menu item is clicked.
@@ -457,5 +482,28 @@ namespace SuperSudoku
                 MessageBox.Show("The current puzzle cannot be solved.");
             }
         }
-    }
+
+        /// <summary>
+        /// This function is called when we need a new puzzle.
+        /// </summary>
+	    private void NewGameClick(object sender, RoutedEventArgs e)
+        {
+            // save game if we need to
+            if (GameInProgress())
+            {
+                var save = MessageBox.Show("Save current game before creating a new one?", 
+                    "Save current game?", MessageBoxButton.YesNo);
+                if (save == MessageBoxResult.Yes)
+                {
+                    SaveGameClick(sender, e);
+                }
+            }
+
+            // create new game
+            //TODO: make the generator generate a new puzzle
+            var newPuzzleGrid = new PuzzleGrid();
+            SetPuzzleGrid(newPuzzleGrid);
+            puzzleGrid = newPuzzleGrid;
+        }
+	}
 }

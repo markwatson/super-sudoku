@@ -16,7 +16,7 @@ namespace SuperSudoku
         /// <summary>
         /// possible indices
         /// </summary>
-        //private List<int> indexRange = new List<int>(Enumerable.Range(0, 8));
+        private List<int> indexRange = new List<int>(Enumerable.Range(0, 9));
 
         /// <summary>
         /// This constructor creates the grid.
@@ -31,7 +31,9 @@ namespace SuperSudoku
             int success = 0;
             bool validIndex = false;
             bool validNewVal = false;
-            List<int> valueRange = new List<int>(Enumerable.Range(-9, 9));
+            // NOTE: Enumerable.Range takes a starting value, and then a number
+            // NOTE: of items to include, not a starting then ending value.
+            List<int> valueRange = new List<int>(Enumerable.Range(-9, 19));
 
             //if ((indexRange.Contains(rowA)) && (indexRange.Contains(columnB)))
             if (rowA >= 0 && rowA < 9 && columnB >= 0 && columnB < 9)
@@ -59,7 +61,7 @@ namespace SuperSudoku
             bool validIndex = false;
             bool validNewVal = false;
             bool canReplace = false;
-            List<int> valueRange = new List<int>(Enumerable.Range(0, 9));
+            List<int> valueRange = new List<int>(Enumerable.Range(0, 10));
 
             //if ((indexRange.Contains(rowA)) && (indexRange.Contains(columnB)))
             if (rowA >= 0 && rowA < 9 && columnB >= 0 && columnB < 9)

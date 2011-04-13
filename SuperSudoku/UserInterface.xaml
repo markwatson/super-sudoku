@@ -95,7 +95,7 @@
 	<Grid x:Name="LayoutRoot">
 		<Menu Height="24" VerticalAlignment="Top">
 			<MenuItem x:Name="FileMenu" Header="File">
-				<MenuItem x:Name="NewGame" Header="New"/>
+				<MenuItem x:Name="NewGame" Header="New" Click="NewGameClick"/>
 				<MenuItem x:Name="LoadGame" Header="Load"/>
 				<MenuItem x:Name="SaveGame" Header="Save" Click="SaveGameClick" />
 				<MenuItem x:Name="SaveGameUnsolved" Header="Save Unsolved" Click="SaveGameUnsolvedClick" />
