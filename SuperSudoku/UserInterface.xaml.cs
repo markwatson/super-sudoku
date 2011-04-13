@@ -49,6 +49,8 @@ namespace SuperSudoku
 
 			// Initialize the save game dialog
             saveGameDialog = new SaveFileDialog {Filter = "Sudoku Games | *.sud", DefaultExt = ".sud"};
+
+            SetPuzzleGrid(new PuzzleGrid());
 		}
 
         // The following methods are helper methods
@@ -89,7 +91,7 @@ namespace SuperSudoku
         /// Elements are in the form "_1x1" where the first number is the row and the second is the column.
         /// Returns itself on fail.
         /// </summary>
-        private static string GetMovedGridItem(string element, Direction direction)
+        private string GetMovedGridItem(string element, Direction direction)
         {
             var ret = element;
 
@@ -99,6 +101,7 @@ namespace SuperSudoku
             {
                 var row = rowCol.Item1+1; // plus one because they're 0 indexed.
                 var col = rowCol.Item2+1;
+                var disabled = (Style) Resources["GridElementDisabled"];
 
                 switch (direction)
                 {
@@ -107,6 +110,17 @@ namespace SuperSudoku
                         if (col != 1)
                         {
                             col -= 1;
+
+                            var textbox = (TextBox) FindName(GetTextBoxNameFromRowColumn(row, col));
+                            if (textbox != null && textbox.Style == disabled)
+                            {
+                                while (col != 1 && textbox.Style == disabled)
+                                {
+                                    col -= 1;
+
+                                    textbox = (TextBox)FindName(GetTextBoxNameFromRowColumn(row, col));
+                                }
+                            }
                         }
                         break;
                     case Direction.Right:
@@ -114,6 +128,17 @@ namespace SuperSudoku
                         if (col != GameBoardCols)
                         {
                             col += 1;
+
+                            var textbox = (TextBox)FindName(GetTextBoxNameFromRowColumn(row, col));
+                            if (textbox != null && textbox.Style == disabled)
+                            {
+                                while (col != GameBoardCols && textbox.Style == disabled)
+                                {
+                                    col += 1;
+
+                                    textbox = (TextBox)FindName(GetTextBoxNameFromRowColumn(row, col));
+                                }
+                            }
                         }
                         break;
                     case Direction.Up:
@@ -121,6 +146,17 @@ namespace SuperSudoku
                         if (row != 1)
                         {
                             row -= 1;
+
+                            var textbox = (TextBox)FindName(GetTextBoxNameFromRowColumn(row, col));
+                            if (textbox != null && textbox.Style == disabled)
+                            {
+                                while (row != 1 && textbox.Style == disabled)
+                                {
+                                    row -= 1;
+
+                                    textbox = (TextBox)FindName(GetTextBoxNameFromRowColumn(row, col));
+                                }
+                            }
                         }
                         break;
                     case Direction.Down:
@@ -128,6 +164,17 @@ namespace SuperSudoku
                         if (row != GameBoardRows)
                         {
                             row += 1;
+
+                            var textbox = (TextBox)FindName(GetTextBoxNameFromRowColumn(row, col));
+                            if (textbox != null && textbox.Style == disabled)
+                            {
+                                while (row != GameBoardRows && textbox.Style == disabled)
+                                {
+                                    row += 1;
+
+                                    textbox = (TextBox)FindName(GetTextBoxNameFromRowColumn(row, col));
+                                }
+                            }
                         }
                         break;
                 }
@@ -189,10 +236,23 @@ namespace SuperSudoku
             {
                 for (int j = 0; j < GameBoardCols; j++)
                 {
-                    var box = (TextBox) FindName(GetTextBoxNameFromRowColumn(i, j));
+                    var box = (TextBox) FindName(GetTextBoxNameFromRowColumn(i+1, j+1));
                     if (box != null)
                     {
-                        box.Text = grid.Grid[i, j].ToString();
+                        if (grid.Grid[i,j] < 0)
+                        {
+                            box.Text = ((-1) * grid.Grid[i,j]).ToString();
+                            box.Style = (Style)(Resources["GridElementDisabled"]);
+                        }
+                        else if (grid.Grid[i,j] > 0)
+                        {
+                            box.Text = grid.Grid[i,j].ToString();
+                        }
+                        else
+                        {
+                            box.Text = "";
+                        }
+                        
                     }
                     
                 }
