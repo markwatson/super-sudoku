@@ -10,7 +10,7 @@ namespace SuperSudoku
         /// This is the internal grid element.
         /// Reading of the private grid element is allowed. Setting it is not allowed.
         /// </summary>
-        public int[,] Grid { get; private set; }
+        private int[,] grid;
 
         /// <summary>
         /// Max number in any part of the array
@@ -22,7 +22,7 @@ namespace SuperSudoku
         /// </summary>
         public PuzzleGrid()
         {
-            Grid = new int[9,9];
+            grid = new int[9,9];
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace SuperSudoku
             // if everything is valid proceed
             if (validIndex && validNewVal)
             {
-                Grid[rowA, columnB] = value;
+                grid[rowA, columnB] = value;
                 success = 1;
             }
             else
@@ -90,14 +90,14 @@ namespace SuperSudoku
             }
 
             // confirm value in location is replaceable
-            if (Grid[rowA, columnB] >= 0)
+            if (grid[rowA, columnB] >= 0)
             {
                 canReplace = true; 
             }
                 
             if (validIndex && validNewVal && canReplace)
             {
-                Grid[rowA, columnB] = value;
+                grid[rowA, columnB] = value;
                 success = 1;
             }
             else
@@ -120,7 +120,7 @@ namespace SuperSudoku
 
             if (rowA >= 0 && rowA < 9 && columnB >= 0 && columnB < 9)
             {
-                ret = Grid[rowA, columnB];
+                ret = grid[rowA, columnB];
             }
 
             return ret;
@@ -134,7 +134,7 @@ namespace SuperSudoku
         {
             //enable cloning for safe copying of the object
             PuzzleGrid p = new PuzzleGrid();
-            p.Grid = this.Grid;
+            p.grid = this.grid;
             return p;
         }
     }

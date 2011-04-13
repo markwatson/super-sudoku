@@ -239,14 +239,14 @@ namespace SuperSudoku
                     var box = (TextBox) FindName(GetTextBoxNameFromRowColumn(i+1, j+1));
                     if (box != null)
                     {
-                        if (grid.Grid[i,j] < 0)
+                        if (grid.GetCell(i,j) < 0)
                         {
-                            box.Text = ((-1) * grid.Grid[i,j]).ToString();
+                            box.Text = ((-1) * grid.GetCell(i,j)).ToString();
                             box.Style = (Style)(Resources["GridElementDisabled"]);
                         }
-                        else if (grid.Grid[i,j] > 0)
+                        else if (grid.GetCell(i,j) > 0)
                         {
-                            box.Text = grid.Grid[i,j].ToString();
+                            box.Text = grid.GetCell(i, j).ToString();
                         }
                         else
                         {
@@ -270,7 +270,7 @@ namespace SuperSudoku
             {
                 for (int j = 0; j < GameBoardCols; j++)
                 {
-                    sum += puzzleGrid.Grid[i, j];
+                    sum += puzzleGrid.GetCell(i, j);
                 }
             }
 
