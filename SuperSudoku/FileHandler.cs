@@ -22,5 +22,15 @@ namespace SuperSudoku
         {
             return true;
         }
+
+        /// <summary>
+        /// This function opens a game.
+        /// </summary>
+        public PuzzleGrid OpenFile(String fileName)
+        {
+            PuzzleGrid grid = null;
+
+            return grid;
+        }
     }
 }

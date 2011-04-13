@@ -96,7 +96,7 @@
 		<Menu Height="24" VerticalAlignment="Top">
 			<MenuItem x:Name="FileMenu" Header="File">
 				<MenuItem x:Name="NewGame" Header="New" Click="NewGameClick"/>
-				<MenuItem x:Name="LoadGame" Header="Load"/>
+                <MenuItem x:Name="LoadGame" Header="Load"  Click="LoadGameClick"/>
 				<MenuItem x:Name="SaveGame" Header="Save" Click="SaveGameClick" />
 				<MenuItem x:Name="SaveGameUnsolved" Header="Save Unsolved" Click="SaveGameUnsolvedClick" />
 				<MenuItem x:Name="EnterPuzzle" Header="Enter Puzzle"/>

@@ -33,6 +33,7 @@ namespace SuperSudoku
 
         // GUI elements are defined here
         private readonly SaveFileDialog saveGameDialog;
+        private readonly OpenFileDialog openGameDialog;
 
         /// <summary>
         /// This function instantiates all the game objects and sets up the game window.
@@ -49,6 +50,7 @@ namespace SuperSudoku
 
 			// Initialize the save game dialog
             saveGameDialog = new SaveFileDialog {Filter = "Sudoku Games | *.sud", DefaultExt = ".sud"};
+            openGameDialog = new OpenFileDialog { Filter = "Sudoku Games | *.sud", DefaultExt = ".sud" };
 
             SetPuzzleGrid(new PuzzleGrid());
 		}
@@ -81,6 +83,33 @@ namespace SuperSudoku
                 if (!success)
                 {
                     MessageBox.Show("There was a problem saving your file. Please try again.");
+                }
+            }
+        }
+
+        /// <summary>
+        /// This method shows the open file dialog box.
+        /// </summary>
+        private void OpenFile()
+        {
+            // Show save file dialog box
+            var result = openGameDialog.ShowDialog();
+
+            // Process save file dialog box results
+            if (result == true)
+            {
+                // Save document
+                string fileName = openGameDialog.FileName;
+
+                PuzzleGrid grid = fileHandler.OpenFile(fileName);
+
+                if (grid == null)
+                {
+                    MessageBox.Show("There was a problem opening your file. Please try again.");
+                }
+                else
+                {
+                    SetPuzzleGrid(grid);
                 }
             }
         }
@@ -339,6 +368,14 @@ namespace SuperSudoku
         private void SaveGameUnsolvedClick(object sender, RoutedEventArgs e)
         {
             SaveFile(true);
+        }
+
+        /// <summary>
+        /// This function is called when the load game menu item is clicked.
+        /// </summary>
+        private void LoadGameClick(object sender, RoutedEventArgs e)
+        {
+            OpenFile();
         }
 
         /// <summary>
