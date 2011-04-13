@@ -53,13 +53,14 @@ namespace SuperSudoku
         }
         public int TryNumber()
         {
-            int i = -1;
-            
-            while (possValues[i] == 0 || hasBeenTried[i] == true) //if invalid value or has not yet been tried
+            int ret = 0;
+            int i = 1;
+            while (possValues[i] == 0 || hasBeenTried[i] == true) //if invalid value or has been tried
             {
                 i = rng.Next(0, currentIndex - 1); //keep trying to generate valid value
             }
-            return i;
+            ret = possValues[i];
+            return ret;
         }
         public int Count //returns how many elements in array
         {

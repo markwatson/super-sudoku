@@ -56,7 +56,7 @@ namespace SuperSudoku
             #region SPECIAL CASES: CORNERS
             ///Deal with special cases: [r, c] is a corner, either of 9x9
             ///grid, or 3x3 subgrid
-            if (r == 0 && c == 0 || r == 0 && cLoc == 0)//Top-left
+            if (r == 0 && c == 0 || rLoc == 0 && cLoc == 0)//Top-left
             {
                 ///Check (r, c) through (r + 2, c + 2)
                 for (int i = r; i < r + 3; i++)
@@ -177,9 +177,9 @@ namespace SuperSudoku
             {
                 foundValues[puzzle.GetCell(i, c)] = puzzle.GetCell(i, c);
             }
-
+            
             //Populate lists with values
-            for (int i = 1; i < 9; i++)
+            for (int i = 1; i < 10; i++)
             {
                 ///Iterate through foundValues, where the value held in 
                 ///foundValues[i] will indicate that value has been found.
@@ -197,12 +197,13 @@ namespace SuperSudoku
         private PuzzleGrid FillSingleChoices(PuzzleGrid puzzle)
         {
             bool replacementMade = false;
-            int value = 0;
+            
             for (int i = 0; i < 9; i++)
             {
                 for (int j = 0; j < 9; j++)
                 {
-                    if (possValues[i,j].Count == 1) //If only 1 possible value
+                    int value = 0;
+                    if (possValues[i,j].Count == 2 && puzzle.GetCell(i, j) == 0) //If only 1 possible value
                     {
                         while (value == 0)
                         {
