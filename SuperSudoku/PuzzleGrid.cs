@@ -11,11 +11,12 @@ namespace SuperSudoku
         /// Reading of the private grid element is allowed. Setting it is not allowed.
         /// </summary>
         public int[,] Grid { get; private set; }
+        const int MAX = 9; //Max number in any part of the array
 
         /// <summary>
         /// possible indices
         /// </summary>
-        private List<int> indexRange = new List<int>(Enumerable.Range(0, 8));
+        //private List<int> indexRange = new List<int>(Enumerable.Range(0, 8));
 
         /// <summary>
         /// This constructor creates the grid.
@@ -32,7 +33,8 @@ namespace SuperSudoku
             bool validNewVal = false;
             List<int> valueRange = new List<int>(Enumerable.Range(-9, 9));
 
-            if ((indexRange.Contains(rowA)) && (indexRange.Contains(columnB)))
+            //if ((indexRange.Contains(rowA)) && (indexRange.Contains(columnB)))
+            if (rowA >= 0 && rowA < 9 && columnB >= 0 && columnB < 9)
                 validIndex = true;       //confirm that valid grid location is used
             else
                 validIndex = false;
@@ -59,7 +61,8 @@ namespace SuperSudoku
             bool canReplace = false;
             List<int> valueRange = new List<int>(Enumerable.Range(0, 9));
 
-            if ((indexRange.Contains(rowA)) && (indexRange.Contains(columnB)))
+            //if ((indexRange.Contains(rowA)) && (indexRange.Contains(columnB)))
+            if (rowA >= 0 && rowA < 9 && columnB >= 0 && columnB < 9)
                 validIndex = true;       //confirm that valid grid location is used
             else
                 validIndex = false;
@@ -83,7 +86,8 @@ namespace SuperSudoku
 
         public int GetCell(int rowA, int columnB)
         {                                   //return cell value for comparisons etc
-            if ((indexRange.Contains(rowA)) && (indexRange.Contains(columnB)))
+            //if ((indexRange.Contains(rowA)) && (indexRange.Contains(columnB)))
+            if (rowA >= 0 && rowA < 9 && columnB >= 0 && columnB < 9)
                 return (Grid[rowA, columnB]);
             else
                 return (0);

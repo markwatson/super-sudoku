@@ -11,7 +11,7 @@ namespace SuperSudoku
         /// Constructs a puzzle solver class.
         /// </summary>
 
-        List<int>[,] possValues;  //Matrix of lists holding possible values
+        PossibleValues[,] possValues;  //Matrix of lists holding possible values
         int numSolns;
         bool foundSoln;
         bool isSolved = false;
@@ -25,7 +25,14 @@ namespace SuperSudoku
 
         public PuzzleSolver()
         {
-            
+            possValues = new PossibleValues[9, 9];
+            for (int i = 0; i < 9; i++)
+            {
+                for (int j = 0; j < 9; j++)
+                {
+                    possValues[i, j] = new PossibleValues();
+                }
+            }
         }
 
         /// <summary>
@@ -40,7 +47,7 @@ namespace SuperSudoku
             int[] foundValues = new int[10]; //holds values found, 0 == empty
             int cLoc; //location in 3x3 subgrid column
             int rLoc; //location in 3x3 subgrid column
-            possValues = new List<int>[9,9];
+
             cLoc = c % 3; //0 == left, 1 == center, 2 == right
             rLoc = r % 3; //0 == top, 1 == center, 2 == bottom
 
@@ -180,7 +187,7 @@ namespace SuperSudoku
                 ///possible value for the empty slot. Because the found value
                 ///array utilizes natural indexing, i == the value 1 - 9. If
                 ///[i] is null, the possible value for the empty cell is i.
-                if (foundValues[i] == null)
+                if (foundValues[i] == 0)
                 {
                     possValues[r, c].Add(i);
                 }
@@ -190,14 +197,17 @@ namespace SuperSudoku
         private PuzzleGrid FillSingleChoices(PuzzleGrid puzzle)
         {
             bool replacementMade = false;
-            int value;
+            int value = 0;
             for (int i = 0; i < 9; i++)
             {
                 for (int j = 0; j < 9; j++)
                 {
                     if (possValues[i,j].Count == 1) //If only 1 possible value
                     {
-                        value = possValues[i, j].Max();
+                        while (value == 0)
+                        {
+                            value = possValues[i, j].TryNumber();
+                        }
                         puzzle.UserSetCell(i, j, value);
                         replacementMade = true;
                     }
@@ -328,8 +338,7 @@ namespace SuperSudoku
                     while (!done && i <= numChoices)
                     {
                         int choice = PickOneTrue(r, c);
-                        int value = possValues[r, c].ElementAt(choice);
-                        possValues[r, c].RemoveAt(choice); //remove from  poss
+                        int value = possValues[r, c].TryNumber();
                         puzzle.UserSetCell(r, c, value);
                         isSolved = IsSolved(puzzle);
 

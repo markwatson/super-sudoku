@@ -347,44 +347,54 @@ namespace SuperSudoku
             {
                     // When we're setting the boxes we also keep the game grid up to date.
                 case Key.D1:
+                case Key.NumPad1:
                     ((TextBox)sender).Text = "1";
                     puzzleGrid.InitSetCell(rowCol.Item1, rowCol.Item2, 1);
                     break;
                 case Key.D2:
+                case Key.NumPad2:
                     ((TextBox)sender).Text = "2";
                     puzzleGrid.InitSetCell(rowCol.Item1, rowCol.Item2, 2);
                     break;
                 case Key.D3:
+                case Key.NumPad3:
                     ((TextBox)sender).Text = "3";
                     puzzleGrid.InitSetCell(rowCol.Item1, rowCol.Item2, 3);
                     break;
                 case Key.D4:
+                case Key.NumPad4:
                     ((TextBox)sender).Text = "4";
                     puzzleGrid.InitSetCell(rowCol.Item1, rowCol.Item2, 4);
                     break;
                 case Key.D5:
+                case Key.NumPad5:
                     ((TextBox)sender).Text = "5";
                     puzzleGrid.InitSetCell(rowCol.Item1, rowCol.Item2, 5);
                     break;
                 case Key.D6:
+                case Key.NumPad6:
                     ((TextBox)sender).Text = "6";
                     puzzleGrid.InitSetCell(rowCol.Item1, rowCol.Item2, 6);
                     break;
                 case Key.D7:
+                case Key.NumPad7:
                     ((TextBox)sender).Text = "7";
                     puzzleGrid.InitSetCell(rowCol.Item1, rowCol.Item2, 7);
                     break;
                 case Key.D8:
+                case Key.NumPad8:
                     ((TextBox)sender).Text = "8";
                     puzzleGrid.InitSetCell(rowCol.Item1, rowCol.Item2, 8);
                     break;
                 case Key.D9:
+                case Key.NumPad9:
                     ((TextBox)sender).Text = "9";
                     puzzleGrid.InitSetCell(rowCol.Item1, rowCol.Item2, 9);
                     break;
                 case Key.Delete:
                 case Key.Back:
                 case Key.D0:
+                case Key.NumPad0:
                 case Key.Space:
                     ((TextBox)sender).Text = "";
                     puzzleGrid.InitSetCell(rowCol.Item1, rowCol.Item2, 0);
