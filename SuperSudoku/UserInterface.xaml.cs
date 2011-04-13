@@ -510,9 +510,10 @@ namespace SuperSudoku
         private void SolveNowClick(object sender, RoutedEventArgs e)
         {
             var result = puzzleSolver.SolveGrid(puzzleGrid);
-            if (result)
+            if (result == true)
             {
                 SetPuzzleGrid(puzzleSolver.SolutionGrid);
+                MessageBox.Show("The current puzzle hass been solved.");
             }
             else
             {

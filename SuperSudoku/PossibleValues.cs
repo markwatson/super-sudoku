@@ -62,11 +62,29 @@ namespace SuperSudoku
             ret = possValues[i];
             return ret;
         }
+        /// <summary>
+        /// Removes a value when it's been definitively set
+        /// </summary>
+        public void RemovePossible(int value)
+        {
+            
+            int[] temp = new int[9];    //create temp array
+            int tempIndex = 0;
+            for (int i = 0; i < 9; i++)
+            {
+                if (possValues[i] != value)
+                {
+                    temp[tempIndex] = possValues[i];
+                    tempIndex++;
+                }
+            }
+            possValues = temp;
+        }
         public int Count //returns how many elements in array
         {
             get
             {
-                return currentIndex + 1;  //changes from 0-indexing to natural counting
+                return currentIndex;  //changes from 0-indexing to natural counting
             }
         }
     }
