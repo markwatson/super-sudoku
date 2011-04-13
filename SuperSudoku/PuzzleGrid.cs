@@ -11,12 +11,11 @@ namespace SuperSudoku
         /// Reading of the private grid element is allowed. Setting it is not allowed.
         /// </summary>
         public int[,] Grid { get; private set; }
-        const int MAX = 9; //Max number in any part of the array
 
         /// <summary>
-        /// possible indices
+        /// Max number in any part of the array
         /// </summary>
-        private List<int> indexRange = new List<int>(Enumerable.Range(0, 9));
+        private const int Max = 9;
 
         /// <summary>
         /// This constructor creates the grid.
@@ -26,77 +25,114 @@ namespace SuperSudoku
             Grid = new int[9,9];
         }
 
+        /// <summary>
+        /// This sets a cell to any, not validating if it's setting it to a user settable value.
+        /// </summary>
+        /// <param name="rowA">The 0-based row number.</param>
+        /// <param name="columnB">The 0-based column number.</param>
+        /// <param name="value">The value to set the cell to.</param>
+        /// <returns>1 for success, 0 for a failure.</returns>
         public int InitSetCell(int rowA, int columnB, int value)
         {
             int success = 0;
             bool validIndex = false;
             bool validNewVal = false;
-            // NOTE: Enumerable.Range takes a starting value, and then a number
-            // NOTE: of items to include, not a starting then ending value.
-            List<int> valueRange = new List<int>(Enumerable.Range(-9, 19));
 
-            //if ((indexRange.Contains(rowA)) && (indexRange.Contains(columnB)))
+            //confirm that a valid grid location is used
             if (rowA >= 0 && rowA < 9 && columnB >= 0 && columnB < 9)
-                validIndex = true;       //confirm that valid grid location is used
-            else
-                validIndex = false;
-            if (valueRange.Contains(value))
-                validNewVal = true;           //confirm new value is in range -9..9
-            else
-                validNewVal = false;
+            {
+                validIndex = true;
+            }
+
+            //confirm new value is in range -9..9
+            if (value >= -9 && value <= 9)
+            {
+                validNewVal = true;
+            }
+
+            // if everything is valid proceed
             if (validIndex && validNewVal)
             {
                 Grid[rowA, columnB] = value;
                 success = 1;
             }
             else
+            {
                 success = 0;
+            }
+
             return (success);
         }
 
-
+        /// <summary>
+        /// This function also sets a cell, but validates that is within the user setable range.
+        /// </summary>
+        /// <param name="rowA">The 0-based row number.</param>
+        /// <param name="columnB">The 0-based column number.</param>
+        /// <param name="value">The value to set the cell to.</param>
+        /// <returns>1 for success, 0 for a failure.</returns>
         public int UserSetCell(int rowA, int columnB, int value)
         {
             int success = 0;
             bool validIndex = false;
             bool validNewVal = false;
             bool canReplace = false;
-            List<int> valueRange = new List<int>(Enumerable.Range(0, 10));
 
-            //if ((indexRange.Contains(rowA)) && (indexRange.Contains(columnB)))
             if (rowA >= 0 && rowA < 9 && columnB >= 0 && columnB < 9)
-                validIndex = true;       //confirm that valid grid location is used
-            else
-                validIndex = false;
-            if (valueRange.Contains(value))
-                validNewVal = true;            //confirm new value is in range 0..9
-            else
-                validNewVal = false;
+            {
+                validIndex = true; //confirm that valid grid location is used
+            }
+
+            // confirm new value is in range 0..9
+            if (value >= 0 && value <= 9)
+            {
+                validNewVal = true;
+            }
+
+            // confirm value in location is replaceable
             if (Grid[rowA, columnB] >= 0)
-                canReplace = true;       //confirm value in location is replaceable
-            else
-                canReplace = false;
+            {
+                canReplace = true; 
+            }
+                
             if (validIndex && validNewVal && canReplace)
             {
                 Grid[rowA, columnB] = value;
                 success = 1;
             }
             else
+            {
                 success = 0;
-            return (success);
+            }
+                
+            return success;
         }
 
+        /// <summary>
+        /// Return cell value for comparisons, etc.
+        /// </summary>
+        /// <param name="rowA">The 0-based row number.</param>
+        /// <param name="columnB">The 0-based column number.</param>
+        /// <returns>0 for a failure.</returns>
         public int GetCell(int rowA, int columnB)
-        {                                   //return cell value for comparisons etc
-            //if ((indexRange.Contains(rowA)) && (indexRange.Contains(columnB)))
+        {
+            var ret = 0;
+
             if (rowA >= 0 && rowA < 9 && columnB >= 0 && columnB < 9)
-                return (Grid[rowA, columnB]);
-            else
-                return (0);
+            {
+                ret = Grid[rowA, columnB];
+            }
+
+            return ret;
         }
 
+        /// <summary>
+        /// This clones the object.
+        /// </summary>
+        /// <returns>A clone of itself.</returns>
         public object Clone()
-        {                           //enable cloning for safe copying of the object
+        {
+            //enable cloning for safe copying of the object
             PuzzleGrid p = new PuzzleGrid();
             p.Grid = this.Grid;
             return p;
