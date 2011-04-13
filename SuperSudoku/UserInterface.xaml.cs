@@ -500,10 +500,18 @@ namespace SuperSudoku
             }
 
             // create new game
-            //TODO: make the generator generate a new puzzle
-            var newPuzzleGrid = new PuzzleGrid();
-            SetPuzzleGrid(newPuzzleGrid);
-            puzzleGrid = newPuzzleGrid;
+            // choose difficulty
+            var dlg = new NewGameDifficultyDialogBox {Owner = this};
+            dlg.ShowDialog();
+            var difficulty = dlg.HowHard;
+
+            if (dlg.CreateGame)
+            {
+                //TODO: make the generator generate a new puzzle, pass in difficulty.
+                var newPuzzleGrid = new PuzzleGrid();
+                SetPuzzleGrid(newPuzzleGrid);
+                puzzleGrid = newPuzzleGrid;
+            }
         }
 	}
 }
