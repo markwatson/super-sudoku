@@ -16,14 +16,14 @@ namespace SuperSudoku
         public PossibleValues()
         {
             currentIndex = 0;
-            possValues = new int[9];
-            hasBeenTried = new bool[9];
+            possValues = new int[10];
+            hasBeenTried = new bool[10];
             int warmup; //for warming up RNG
             for(int i = 0; i < 50000; i++)//warm up RNG
             {
                 warmup = rng.Next();
             }
-            for (int i = 0; i < 9; i++)
+            for (int i = 0; i < 10; i++)
             {
                 possValues[i] = 0;
                 hasBeenTried[i] = false;
@@ -38,7 +38,7 @@ namespace SuperSudoku
         public void Add(int value)
         {
             bool exists = false; //tests if value already entered
-            for (int i = 0; i < 9; i++)
+            for (int i = 0; i < 10; i++)
             {
                 if (value == possValues[i])
                 {
@@ -65,7 +65,7 @@ namespace SuperSudoku
         /// <summary>
         /// Removes a value when it's been definitively set
         /// </summary>
- /*       public void RemovePossible(int value)
+  /*      public void RemovePossible(int value)
         {
             
             int[] temp = new int[9];    //create temp array

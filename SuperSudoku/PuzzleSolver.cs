@@ -47,8 +47,6 @@ namespace SuperSudoku
             int[] foundValues = new int[10]; //holds values found, 0 == empty
             int cLoc; //location in 3x3 subgrid column
             int rLoc; //location in 3x3 subgrid column
-            int a = r;
-            int b = c;
 
             cLoc = c % 3; //0 == left, 1 == center, 2 == right
             rLoc = r % 3; //0 == top, 1 == center, 2 == bottom
@@ -171,13 +169,13 @@ namespace SuperSudoku
             ///Check row for given values
             for (int i = 0; i < 9; i++)
             {
-                foundValues[puzzle.GetCell(a, i)] = puzzle.GetCell(a, i);
+                foundValues[puzzle.GetCell(r, i)] = puzzle.GetCell(r, i);
             }
 
             ///Check column for given values
             for (int i = 0; i < 9; i++)
             {
-                foundValues[puzzle.GetCell(i, b)] = puzzle.GetCell(i, b);
+                foundValues[puzzle.GetCell(i, c)] = puzzle.GetCell(i, c);
             }
             
             //Populate lists with values
@@ -205,10 +203,13 @@ namespace SuperSudoku
                 for (int j = 0; j < 9; j++)
                 {
                     int value = 0;
-                    if (possValues[i,j].Count == 1 && puzzle.GetCell(i, j) == 0) //If only 1 possible value
+                    if (possValues[i,j].Count == 2 && puzzle.GetCell(i, j) == 0) //If only 1 possible value
                     {
+                        while (value == 0)
+                        {
+                            value = possValues[i, j].TryNumber();
+                        }
                         puzzle.UserSetCell(i, j, value);
-                       // possValues[i, j].RemovePossible(value);
                         replacementMade = true;
                     }
                 }
@@ -339,10 +340,9 @@ namespace SuperSudoku
                     {
                         int choice = PickOneTrue(r, c);
                         int value = possValues[r, c].TryNumber();
-                       // puzzle.UserSetCell(r, c, value);
-                        //possValues[r, c].RemovePossible(value);
+                        puzzle.UserSetCell(r, c, value);
                         isSolved = IsSolved(puzzle);
-                        
+
                         if (stopLooking == true)
                         {
                             done = true;
