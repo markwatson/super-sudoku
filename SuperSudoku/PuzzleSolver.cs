@@ -208,7 +208,7 @@ namespace SuperSudoku
                     if (possValues[i,j].Count == 1 && puzzle.GetCell(i, j) == 0) //If only 1 possible value
                     {
                         puzzle.UserSetCell(i, j, value);
-                        possValues[i, j].RemovePossible(value);
+                       // possValues[i, j].RemovePossible(value);
                         replacementMade = true;
                     }
                 }
@@ -339,11 +339,10 @@ namespace SuperSudoku
                     {
                         int choice = PickOneTrue(r, c);
                         int value = possValues[r, c].TryNumber();
-                        puzzle.UserSetCell(r, c, value);
-                        possValues[r, c].RemovePossible(value);
+                       // puzzle.UserSetCell(r, c, value);
+                        //possValues[r, c].RemovePossible(value);
                         isSolved = IsSolved(puzzle);
-                        stopLooking = SolveGrid(puzzle);
-
+                        
                         if (stopLooking == true)
                         {
                             done = true;

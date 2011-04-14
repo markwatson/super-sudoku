@@ -65,7 +65,7 @@ namespace SuperSudoku
         /// <summary>
         /// Removes a value when it's been definitively set
         /// </summary>
-        public void RemovePossible(int value)
+ /*       public void RemovePossible(int value)
         {
             
             int[] temp = new int[9];    //create temp array
@@ -79,7 +79,7 @@ namespace SuperSudoku
                 }
             }
             possValues = temp;
-        }
+        }*/
         public int Count //returns how many elements in array
         {
             get
