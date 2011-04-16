@@ -134,7 +134,13 @@ namespace SuperSudoku
         {
             //enable cloning for safe copying of the object
             PuzzleGrid p = new PuzzleGrid();
-            p.grid = this.grid;
+            for (int i = 0; i < Max; i++)
+            {
+                for (int j = 0; j < Max; j++)
+                {
+                    p.InitSetCell(i, j, GetCell(i, j));
+                }
+            }
             return p;
         }
     }

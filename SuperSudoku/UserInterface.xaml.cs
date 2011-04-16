@@ -526,7 +526,7 @@ namespace SuperSudoku
         /// </summary>
 	    private void NewGameClick(object sender, RoutedEventArgs e)
         {
-            // save game if we need to
+            // save game if we need to))
             if (GameInProgress())
             {
                 var save = MessageBox.Show("Save current game before creating a new one?", 
