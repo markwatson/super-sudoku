@@ -77,7 +77,7 @@ namespace SuperSudoku
                 }
                 else
                 {
-                    success = fileHandler.SaveFileUnsolved(puzzleGrid, fileName);
+                    success = fileHandler.SaveFile(puzzleGrid, fileName, true);
                 }
 
                 if (!success)
