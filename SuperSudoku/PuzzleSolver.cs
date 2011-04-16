@@ -42,9 +42,12 @@ namespace SuperSudoku
         /// 
         /// r == row; c == column;
         /// </summary>
-        private void PopulatePossibleValues(int r, int c, PuzzleGrid puzzle)
+        private void PopulatePossibleValues(int r, int c, PuzzleGrid puzz)
         {
-            int[] foundValues = new int[10]; //holds values found, 0 == empty
+            PuzzleGrid puzzle = new PuzzleGrid();
+            puzzle = (PuzzleGrid)puzz.Clone();
+            int[] foundValues= new int[10]; //holds values found, 0 == empty
+
             int cLoc; //location in 3x3 subgrid column
             int rLoc; //location in 3x3 subgrid column
 
@@ -63,7 +66,7 @@ namespace SuperSudoku
                 { 
                     for (int j = c; j < c + 3; j++)
                     {
-                        foundValues[puzzle.GetCell(i, j)] = puzzle.GetCell(i, j);
+                        foundValues[Math.Abs(puzzle.GetCell(i, j))] = puzzle.GetCell(i, j);
                     }
                 }
             }
@@ -75,7 +78,7 @@ namespace SuperSudoku
                 { 
                     for (int j = c; j < c + 3; j++)
                     {
-                        foundValues[puzzle.GetCell(i, j)] = puzzle.GetCell(i, j);
+                        foundValues[Math.Abs(puzzle.GetCell(i, j))] = puzzle.GetCell(i, j);
                     }
                 }
             }
@@ -87,7 +90,7 @@ namespace SuperSudoku
                 { 
                     for (int j = c; j > c - 3; j--)
                     {
-                        foundValues[puzzle.GetCell(i, j)] = puzzle.GetCell(i, j);
+                        foundValues[Math.Abs(puzzle.GetCell(i, j))] = puzzle.GetCell(i, j);
                     }
                 }
             }
@@ -99,7 +102,7 @@ namespace SuperSudoku
                 {
                     for (int j = c; j > c - 3; j--)
                     {
-                        foundValues[puzzle.GetCell(i, j)] = puzzle.GetCell(i, j);
+                        foundValues[Math.Abs(puzzle.GetCell(i, j))] = puzzle.GetCell(i, j);
                     }
                 }
             }
@@ -107,46 +110,46 @@ namespace SuperSudoku
 
             #region SPECIAL CASES: SIDES (BUT NOT CORNERS)
             //'else' is carry through from SPECIAL CASES: CORNERS
-            else if (r == 0) //top side
+            else if (rLoc == 0) //top side
             {
                 for (int i = r; i < r + 3; i++)
                 {
                     for (int j = c - 1; j < c + 2; j++)
                     {
-                        foundValues[puzzle.GetCell(i, j)] = puzzle.GetCell(i, j);
+                        foundValues[Math.Abs(puzzle.GetCell(i, j))] = puzzle.GetCell(i, j);
                     }
                 }
             }
 
-            else if (r == 8) //bottom side
+            else if (rLoc == 2) //bottom side
             {
                 for (int i = r; i > r - 3; i--)
                 {
                     for (int j = c - 1; j < c + 2; j++)
                     {
-                        foundValues[puzzle.GetCell(i, j)] = puzzle.GetCell(i, j);
+                        foundValues[Math.Abs(puzzle.GetCell(i, j))] = puzzle.GetCell(i, j);
                     }
                 }
             }
 
-            else if (c == 0) //left side
+            else if (cLoc == 0) //left side
             {
                 for (int i = r - 1; i < r + 2; i++)
                 {
                     for (int j = c; j < c + 3; j++)
                     {
-                        foundValues[puzzle.GetCell(i, j)] = puzzle.GetCell(i, j);
+                        foundValues[Math.Abs(puzzle.GetCell(i, j))] = puzzle.GetCell(i, j);
                     }
                 }
             }
 
-            else if (c == 8) //right side
+            else if (cLoc == 2) //right side
             {
                 for (int i = r - 1; i < r + 2; i++)
                 {
                     for (int j = c; j > c - 3; j--)
                     {
-                        foundValues[puzzle.GetCell(i, j)] = puzzle.GetCell(i, j);
+                        foundValues[Math.Abs(puzzle.GetCell(i, j))] = puzzle.GetCell(i, j);
                     }
                 }
             }
@@ -157,9 +160,9 @@ namespace SuperSudoku
             {
                 for (int i = r - 1; i < r + 2; i++)
                 {
-                    for (int j = c; j > c - 3; j--)
+                    for (int j = c - 1; j < c + 2; j++)
                     {
-                        foundValues[puzzle.GetCell(i, j)] = puzzle.GetCell(i, j);
+                        foundValues[Math.Abs(puzzle.GetCell(i, j))] = puzzle.GetCell(i, j);
                     }
                 }
             }
@@ -169,19 +172,19 @@ namespace SuperSudoku
             ///Check row for given values
             for (int i = 0; i < 9; i++)
             {
-                foundValues[puzzle.GetCell(r, i)] = puzzle.GetCell(r, i);
+                foundValues[Math.Abs(puzzle.GetCell(r, i))] = puzzle.GetCell(r, i);
             }
 
             ///Check column for given values
             for (int i = 0; i < 9; i++)
             {
-                foundValues[puzzle.GetCell(i, c)] = puzzle.GetCell(i, c);
+                foundValues[Math.Abs(puzzle.GetCell(i, c))] = puzzle.GetCell(i, c);
             }
             
             //Populate lists with values
             for (int i = 1; i < 10; i++)
             {
-                ///Iterate through foundValues, where the value held in 
+                ///Iterate through foundValues[Math.Abs(puzzle.GetCell(i, j))] where the value held in 
                 ///foundValues[i] will indicate that value has been found.
                 ///If array slot is empty, value was not found and is 
                 ///possible value for the empty slot. Because the found value
@@ -194,8 +197,10 @@ namespace SuperSudoku
             }
         }
 
-        private PuzzleGrid FillSingleChoices(PuzzleGrid puzzle)
+        private PuzzleGrid FillSingleChoices(PuzzleGrid puzz)
         {
+            PuzzleGrid puzzle = new PuzzleGrid();
+            puzzle = (PuzzleGrid)puzz.Clone();
             bool replacementMade = false;
             
             for (int i = 0; i < 9; i++)
@@ -203,13 +208,14 @@ namespace SuperSudoku
                 for (int j = 0; j < 9; j++)
                 {
                     int value = 0;
-                    if (possValues[i,j].Count == 2 && puzzle.GetCell(i, j) == 0) //If only 1 possible value
+                    if (possValues[i, j].Count == 1 && puzzle.GetCell(i, j) == 0) //If only 1 possible value
                     {
                         while (value == 0)
                         {
                             value = possValues[i, j].TryNumber();
                         }
                         puzzle.UserSetCell(i, j, value);
+                        RemovePossible(i, j, value);
                         replacementMade = true;
                     }
                 }
@@ -221,7 +227,17 @@ namespace SuperSudoku
                 {
                     for (int j = 0; j < 9; j++)
                     {
-                        PopulatePossibleValues(i, j, puzzle); //Repopulate new values
+                        possValues[i, j] = new PossibleValues();
+                    }
+                }
+                for (int i = 0; i < 9; i++)
+                {
+                    for (int j = 0; j < 9; j++)
+                    {
+                        if (puzzle.GetCell(i, j) == 0)
+                        {
+                            PopulatePossibleValues(i, j, puzzle); //Repopulate new values
+                        }
                     }
                 }
                 ///Check for empty locations which now have only 1 available
@@ -234,8 +250,10 @@ namespace SuperSudoku
             return puzzle;
         }
 
-        private bool IsSolved(PuzzleGrid puzzle)
+        private bool IsSolved(PuzzleGrid puzz)
         {
+            PuzzleGrid puzzle = new PuzzleGrid();
+            puzzle = (PuzzleGrid)puzz.Clone();
             isSolved = true; //Assume no blank squares
             for (int i = 0; i < 9; i++)
             {
@@ -263,7 +281,7 @@ namespace SuperSudoku
                 {
                     if (puzzle.GetCell(i, j) == 0) //If blank cell
                     {
-                        if (possValues[i,j].Count < minChoices)
+                        if (possValues[i, j].Count < minChoices && possValues[i, j].Count != 0)
                         {
                             minChoices = possValues[i, j].Count;
                             r = i; //save location
@@ -290,8 +308,10 @@ namespace SuperSudoku
             return choice;
         }
 
-        public bool SolveGrid(PuzzleGrid puzzle)
+        public bool SolveGrid(PuzzleGrid puzz)
         {
+            PuzzleGrid puzzle = new PuzzleGrid();
+            puzzle = (PuzzleGrid)puzz.Clone();
             #region Populate Possible values for all empty (0) locations
             for (int i = 0; i < 9; i++)
             {
@@ -305,7 +325,7 @@ namespace SuperSudoku
             }
             #endregion
 
-            FillSingleChoices(puzzle);
+            puzzle = FillSingleChoices(puzzle);
 
             if (IsSolved(puzzle) == true)
             {
@@ -341,6 +361,7 @@ namespace SuperSudoku
                         int choice = PickOneTrue(r, c);
                         int value = possValues[r, c].TryNumber();
                         puzzle.UserSetCell(r, c, value);
+                        RemovePossible(r, c, value);
                         isSolved = IsSolved(puzzle);
 
                         if (stopLooking == true)
@@ -356,10 +377,144 @@ namespace SuperSudoku
                     }
                 }
             }
-
+            SolutionGrid = puzzle; ///FOR TESTING ONLY!!
             return foundSoln;
         }
 
+        private void RemovePossible(int r, int c, int val)
+        {
+            int cLoc; //location in 3x3 subgrid column
+            int rLoc; //location in 3x3 subgrid column
 
+            cLoc = c % 3; //0 == left, 1 == center, 2 == right
+            rLoc = r % 3; //0 == top, 1 == center, 2 == bottom
+
+            #region CHECK 3X3 GRID VALUES
+
+            #region SPECIAL CASES: CORNERS
+            ///Deal with special cases: [r, c] is a corner, either of 9x9
+            ///grid, or 3x3 subgrid
+            if (r == 0 && c == 0 || rLoc == 0 && cLoc == 0)//Top-left
+            {
+                ///Check (r, c) through (r + 2, c + 2)
+                for (int i = r; i < r + 3; i++)
+                {
+                    for (int j = c; j < c + 3; j++)
+                    {
+                        possValues[i, j].RemovePossible(val);;
+                    }
+                }
+            }
+
+            else if (r == 8 && c == 0 || rLoc == 2 && cLoc == 0) //Bottom-left
+            {
+                ///Check (r, c) through (r - 2, c + 2)
+                for (int i = r; i > r - 3; i--)
+                {
+                    for (int j = c; j < c + 3; j++)
+                    {
+                        possValues[i, j].RemovePossible(val);;
+                    }
+                }
+            }
+
+            else if (r == 0 && c == 8 || rLoc == 0 && cLoc == 2) //Top-right
+            {
+                ///Check (r, c) through (r + 2, c + 2)
+                for (int i = r; i < r + 3; i++)
+                {
+                    for (int j = c; j > c - 3; j--)
+                    {
+                        possValues[i, j].RemovePossible(val);;
+                    }
+                }
+            }
+
+            else if (r == 8 && c == 8 || rLoc == 2 && cLoc == 2) //bottom right
+            {
+                ///Check (r, c) through (r - 2, c - 2)
+                for (int i = r; i > r - 3; i--)
+                {
+                    for (int j = c; j > c - 3; j--)
+                    {
+                        possValues[i, j].RemovePossible(val);;
+                    }
+                }
+            }
+            #endregion
+
+            #region SPECIAL CASES: SIDES (BUT NOT CORNERS)
+            //'else' is carry through from SPECIAL CASES: CORNERS
+            else if (rLoc == 0) //top side
+            {
+                for (int i = r; i < r + 3; i++)
+                {
+                    for (int j = c - 1; j < c + 2; j++)
+                    {
+                        possValues[i, j].RemovePossible(val);;
+                    }
+                }
+            }
+
+            else if (rLoc == 2) //bottom side
+            {
+                for (int i = r; i > r - 3; i--)
+                {
+                    for (int j = c - 1; j < c + 2; j++)
+                    {
+                        possValues[i, j].RemovePossible(val);;
+                    }
+                }
+            }
+
+            else if (cLoc == 0) //left side
+            {
+                for (int i = r - 1; i < r + 2; i++)
+                {
+                    for (int j = c; j < c + 3; j++)
+                    {
+                        possValues[i, j].RemovePossible(val);;
+                    }
+                }
+            }
+
+            else if (cLoc == 2) //right side
+            {
+                for (int i = r - 1; i < r + 2; i++)
+                {
+                    for (int j = c; j > c - 3; j--)
+                    {
+                        possValues[i, j].RemovePossible(val);;
+                    }
+                }
+            }
+
+            #endregion
+
+            else //center of 3x3 grid
+            {
+                for (int i = r - 1; i < r + 2; i++)
+                {
+                    for (int j = c - 1; j < c + 2; j++)
+                    {
+                        possValues[i, j].RemovePossible(val);;
+                    }
+                }
+            }
+
+            #endregion
+
+            ///Check row for given values
+            for (int i = 0; i < 9; i++)
+            {
+                possValues[r, i].RemovePossible(val);
+            }
+
+            ///Check column for given values
+            for (int i = 0; i < 9; i++)
+            {
+                possValues[i, c].RemovePossible(val);;
+            }
+        }
     }
 }

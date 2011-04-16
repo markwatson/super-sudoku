@@ -513,6 +513,7 @@ namespace SuperSudoku
             }
             else
             {
+                SetPuzzleGrid(puzzleSolver.SolutionGrid);
                 MessageBox.Show("The current puzzle cannot be solved.");
             }
         }

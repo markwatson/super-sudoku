@@ -38,7 +38,7 @@ namespace SuperSudoku
         public void Add(int value)
         {
             bool exists = false; //tests if value already entered
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 9; i++)
             {
                 if (value == possValues[i])
                 {
@@ -55,17 +55,18 @@ namespace SuperSudoku
         {
             int ret = 0;
             int i = 1;
-            while (possValues[i] == 0 || hasBeenTried[i] == true) //if invalid value or has been tried
+            while (currentIndex != 0 && (possValues[i] == 0 || hasBeenTried[i] == true)) //if invalid value or has been tried
             {
                 i = rng.Next(0, currentIndex - 1); //keep trying to generate valid value
             }
             ret = possValues[i];
+            RemovePossible(ret);
             return ret;
         }
         /// <summary>
         /// Removes a value when it's been definitively set
         /// </summary>
-  /*      public void RemovePossible(int value)
+        public void RemovePossible(int value)
         {
             
             int[] temp = new int[9];    //create temp array
@@ -79,7 +80,11 @@ namespace SuperSudoku
                 }
             }
             possValues = temp;
-        }*/
+            if (currentIndex > 0)
+            {
+                currentIndex--;
+            }
+        }
         public int Count //returns how many elements in array
         {
             get
