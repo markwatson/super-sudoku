@@ -71,14 +71,7 @@ namespace SuperSudoku
                 string fileName = saveGameDialog.FileName;
 
                 bool success;
-                if (!saveUnsolved)
-                {
-                    success = fileHandler.SaveFile(puzzleGrid, fileName);
-                }
-                else
-                {
-                    success = fileHandler.SaveFile(puzzleGrid, fileName, true);
-                }
+                success = fileHandler.SaveFile(puzzleGrid, fileName, saveUnsolved);
 
                 if (!success)
                 {
@@ -102,6 +95,7 @@ namespace SuperSudoku
                 string fileName = openGameDialog.FileName;
 
                 PuzzleGrid grid = fileHandler.OpenFile(fileName);
+                puzzleGrid = (PuzzleGrid) grid.Clone();
 
                 if (grid == null)
                 {
@@ -268,6 +262,8 @@ namespace SuperSudoku
                     var box = (TextBox) FindName(GetTextBoxNameFromRowColumn(i+1, j+1));
                     if (box != null)
                     {
+                        box.Style = (Style)(Resources["GridElement"]);
+
                         if (grid.GetCell(i,j) < 0)
                         {
                             box.Text = ((-1) * grid.GetCell(i,j)).ToString();

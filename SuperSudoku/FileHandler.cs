@@ -55,7 +55,6 @@ namespace SuperSudoku
         public PuzzleGrid OpenFile(String fileName)
         {
             PuzzleGrid openedPuzzle = new PuzzleGrid();
-		    PuzzleGrid errorGrid = new PuzzleGrid(); //blank puzzle for error
 		    int i = 0; //mnemonic: row
 		    int j = 0; //mnemonic: column
 		    int cellVal = 0;
@@ -87,9 +86,9 @@ namespace SuperSudoku
 			    }
 		    }			
 		    if(eOF)
-			    return(errorGrid);
+			    return null;
 		    else
-                return (openedPuzzle);
+                return openedPuzzle;
         }
     }
 }
