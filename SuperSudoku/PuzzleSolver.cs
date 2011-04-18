@@ -215,7 +215,7 @@ namespace SuperSudoku
                             value = possValues[i, j].TryNumber();
                         }
                         puzzle.UserSetCell(i, j, value);
-                        RemovePossible(i, j, value);
+                        Repopulate(puzzle);
                         replacementMade = true;
                     }
                 }
@@ -223,23 +223,6 @@ namespace SuperSudoku
 
             if (replacementMade == true)
             {
-                for (int i = 0; i < 9; i++)
-                {
-                    for (int j = 0; j < 9; j++)
-                    {
-                        possValues[i, j] = new PossibleValues();
-                    }
-                }
-                for (int i = 0; i < 9; i++)
-                {
-                    for (int j = 0; j < 9; j++)
-                    {
-                        if (puzzle.GetCell(i, j) == 0)
-                        {
-                            PopulatePossibleValues(i, j, puzzle); //Repopulate new values
-                        }
-                    }
-                }
                 ///Check for empty locations which now have only 1 available
                 ///slot. I.e. Had two possible values before filling in 
                 ///single choices, and after a 1-value slot was set, now only
@@ -355,25 +338,26 @@ namespace SuperSudoku
                     int numChoices = possValues[r, c].Count;
                     int i = 1;
                     bool done = false;
+                    bool gotOne = false;
                     
                     while (!done && i <= numChoices)
                     {
                         int choice = PickOneTrue(r, c);
-                        int value = possValues[r, c].TryNumber();
-                        puzzle.UserSetCell(r, c, value);
-                        RemovePossible(r, c, value);
-                        isSolved = IsSolved(puzzle);
-
+                        puzzle.UserSetCell(r, c, choice);
+                        possValues[r, c].Tried(choice);
+                        Repopulate(puzzle);
+                        isSolved = SolveGrid(puzzle);
                         if (stopLooking == true)
                         {
                             done = true;
-                            foundSoln = false;
+                            gotOne = false;
                         }
                         else
                         {
-                            foundSoln = IsSolved(puzzle);
+                            gotOne = IsSolved(puzzle);
                             i++;
                         }
+                        foundSoln = gotOne;
                     }
                 }
             }
@@ -381,139 +365,22 @@ namespace SuperSudoku
             return foundSoln;
         }
 
-        private void RemovePossible(int r, int c, int val)
+
+        private void Repopulate(PuzzleGrid puzz)
         {
-            int cLoc; //location in 3x3 subgrid column
-            int rLoc; //location in 3x3 subgrid column
-
-            cLoc = c % 3; //0 == left, 1 == center, 2 == right
-            rLoc = r % 3; //0 == top, 1 == center, 2 == bottom
-
-            #region CHECK 3X3 GRID VALUES
-
-            #region SPECIAL CASES: CORNERS
-            ///Deal with special cases: [r, c] is a corner, either of 9x9
-            ///grid, or 3x3 subgrid
-            if (r == 0 && c == 0 || rLoc == 0 && cLoc == 0)//Top-left
-            {
-                ///Check (r, c) through (r + 2, c + 2)
-                for (int i = r; i < r + 3; i++)
-                {
-                    for (int j = c; j < c + 3; j++)
-                    {
-                        possValues[i, j].RemovePossible(val);;
-                    }
-                }
-            }
-
-            else if (r == 8 && c == 0 || rLoc == 2 && cLoc == 0) //Bottom-left
-            {
-                ///Check (r, c) through (r - 2, c + 2)
-                for (int i = r; i > r - 3; i--)
-                {
-                    for (int j = c; j < c + 3; j++)
-                    {
-                        possValues[i, j].RemovePossible(val);;
-                    }
-                }
-            }
-
-            else if (r == 0 && c == 8 || rLoc == 0 && cLoc == 2) //Top-right
-            {
-                ///Check (r, c) through (r + 2, c + 2)
-                for (int i = r; i < r + 3; i++)
-                {
-                    for (int j = c; j > c - 3; j--)
-                    {
-                        possValues[i, j].RemovePossible(val);;
-                    }
-                }
-            }
-
-            else if (r == 8 && c == 8 || rLoc == 2 && cLoc == 2) //bottom right
-            {
-                ///Check (r, c) through (r - 2, c - 2)
-                for (int i = r; i > r - 3; i--)
-                {
-                    for (int j = c; j > c - 3; j--)
-                    {
-                        possValues[i, j].RemovePossible(val);;
-                    }
-                }
-            }
-            #endregion
-
-            #region SPECIAL CASES: SIDES (BUT NOT CORNERS)
-            //'else' is carry through from SPECIAL CASES: CORNERS
-            else if (rLoc == 0) //top side
-            {
-                for (int i = r; i < r + 3; i++)
-                {
-                    for (int j = c - 1; j < c + 2; j++)
-                    {
-                        possValues[i, j].RemovePossible(val);;
-                    }
-                }
-            }
-
-            else if (rLoc == 2) //bottom side
-            {
-                for (int i = r; i > r - 3; i--)
-                {
-                    for (int j = c - 1; j < c + 2; j++)
-                    {
-                        possValues[i, j].RemovePossible(val);;
-                    }
-                }
-            }
-
-            else if (cLoc == 0) //left side
-            {
-                for (int i = r - 1; i < r + 2; i++)
-                {
-                    for (int j = c; j < c + 3; j++)
-                    {
-                        possValues[i, j].RemovePossible(val);;
-                    }
-                }
-            }
-
-            else if (cLoc == 2) //right side
-            {
-                for (int i = r - 1; i < r + 2; i++)
-                {
-                    for (int j = c; j > c - 3; j--)
-                    {
-                        possValues[i, j].RemovePossible(val);;
-                    }
-                }
-            }
-
-            #endregion
-
-            else //center of 3x3 grid
-            {
-                for (int i = r - 1; i < r + 2; i++)
-                {
-                    for (int j = c - 1; j < c + 2; j++)
-                    {
-                        possValues[i, j].RemovePossible(val);;
-                    }
-                }
-            }
-
-            #endregion
-
-            ///Check row for given values
             for (int i = 0; i < 9; i++)
             {
-                possValues[r, i].RemovePossible(val);
+                for (int j = 0; j < 9; j++)
+                {
+                    possValues[i, j] = new PossibleValues();
+                }
             }
-
-            ///Check column for given values
             for (int i = 0; i < 9; i++)
             {
-                possValues[i, c].RemovePossible(val);;
+                for (int j = 0; j < 9; j++)
+                {
+                    PopulatePossibleValues(i, j, puzz);
+                }
             }
         }
     }
