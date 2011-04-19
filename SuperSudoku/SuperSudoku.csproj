@@ -71,7 +71,6 @@
     <Compile Include="NewGameDifficultyDialogBox.xaml.cs">
       <DependentUpon>NewGameDifficultyDialogBox.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PossibleValues.cs" />
     <Compile Include="PuzzleGrid.cs" />
     <Compile Include="PuzzleSolver.cs" />
     <Compile Include="PuzzleGenerator.cs" />

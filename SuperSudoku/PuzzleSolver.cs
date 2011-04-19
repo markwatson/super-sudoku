@@ -92,7 +92,7 @@ namespace SuperSudoku
             bool result = false;
             for (int i = 0; i < 9; i++)
             {
-                result = result || (grid.GetCell(row, i) == value);
+                result = result || (Math.Abs(grid.GetCell(row, i)) == value);
             }
             return result;
         }
@@ -103,7 +103,7 @@ namespace SuperSudoku
             bool result = false;
             for (int i = 0; i < 9; i++)
             {
-                result = result || (grid.GetCell(i, col) == value);
+                result = result || (Math.Abs(grid.GetCell(i, col)) == value);
             }
             return result;
         }
@@ -128,7 +128,7 @@ namespace SuperSudoku
             {
                 for (int j = cLow; j < cLow + 3; j++)
                 {
-                    if (g.GetCell(i, j) == value)
+                    if (Math.Abs(g.GetCell(i, j)) == value)
                     {
                         result = true;
                     }
@@ -146,6 +146,7 @@ namespace SuperSudoku
         private int ListPossible(int row, int col, PuzzleGrid g, bool[] list)
         {//return count of possible values, update list to indicate true in each avail slot
             int count = 0;
+            ClearList();
             for (int i = 1; i < 10; i++)
             {
                 if (IsPossible(g, row, col, i) == true)
@@ -165,27 +166,28 @@ namespace SuperSudoku
   //          PuzzleGrid grid = new PuzzleGrid();
     //        grid = (PuzzleGrid)g.Clone();
             bool anyChanges = false;
-            bool[] possList = new bool[10];
-            list.CopyTo(possList, 0);
+ //           bool[] possList = new bool[10];
+   //         list.CopyTo(possList, 0);
             int numChoices;
             do
             {
+                anyChanges = false;
                 for (int i = 0; i < 9; i++)
                 {
                     for (int j = 0; j < 9; j++)
                     {
                         if (grid.GetCell(i, j) == 0)
                         {
-                            numChoices = ListPossible(i, j, grid, possList);
+                            numChoices = ListPossible(i, j, grid, list);
                             if (numChoices == 1)
                             {
-                                grid.UserSetCell(i, j, FirstTrue(possList));
-                                anyChanges = (grid.GetCell(i, j) == 0);
+                                grid.UserSetCell(i, j, FirstTrue(list));
+                                anyChanges = (grid.GetCell(i, j) != 0);
                             }
                         }
                     }
                 }
-            } while(anyChanges == false && !IsSolved(grid));
+            } while(anyChanges == true && !IsSolved(grid));
 
         }
 
@@ -275,6 +277,13 @@ namespace SuperSudoku
                 }
             }
         }
+        private void ClearList()
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                list[i] = false;
+            }
+        }
         public bool SolveGrid(PuzzleGrid g, bool checkUnique)
         {
             PuzzleGrid grid = new PuzzleGrid();
@@ -315,7 +324,7 @@ namespace SuperSudoku
                         choice = PickOneTrue(list);
                         list[choice] = false;
                         grid.UserSetCell(r, c, choice);
-                        solved = (SolveGrid(g, checkUnique));
+                        solved = (SolveGrid(grid, checkUnique));
                         if (stoplooking == true)
                         {
                             done = true;
