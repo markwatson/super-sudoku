@@ -23,8 +23,6 @@ namespace SuperSudoku
         }
         private bool IsSolved(PuzzleGrid grid)
         {
-     //       PuzzleGrid grid = new PuzzleGrid();
-       //     grid = (PuzzleGrid)g.Clone();
             bool result = true;
             int r, c;
             r = 0;
@@ -324,6 +322,8 @@ namespace SuperSudoku
                         choice = PickOneTrue(list);
                         list[choice] = false;
                         grid.UserSetCell(r, c, choice);
+
+                       //-----------We must go deeper. SUDCEPTION!-----------//
                         solved = (SolveGrid(grid, checkUnique));
                         if (stoplooking == true)
                         {
