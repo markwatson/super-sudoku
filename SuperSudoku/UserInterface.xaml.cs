@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -20,6 +21,7 @@ namespace SuperSudoku
         // game grid size
 	    private const int GameBoardCols = 9;
         private const int GameBoardRows = 9;
+	    private const int Max = 9;
 
         // State properties are defined here
         private bool showHintsOn;
@@ -50,9 +52,11 @@ namespace SuperSudoku
 
 			// Initialize the save game dialog
             saveGameDialog = new SaveFileDialog {Filter = "Sudoku Games | *.sud", DefaultExt = ".sud"};
-            openGameDialog = new OpenFileDialog { Filter = "Sudoku Games | *.sud", DefaultExt = ".sud" };
+            openGameDialog = new OpenFileDialog {Filter = "Sudoku Games | *.sud", DefaultExt = ".sud"};
 
             SetPuzzleGrid(new PuzzleGrid());
+
+            SetHintsBoxToDefault();
 		}
 
         // The following methods are helper methods
@@ -105,6 +109,21 @@ namespace SuperSudoku
                 {
                     SetPuzzleGrid(grid);
                 }
+            }
+        }
+
+        /// <summary>
+        /// This function is just a fast way of resetting the hints box on the bottom of the window.
+        /// </summary>
+        private void SetHintsBoxToDefault()
+        {
+            if (showHintsOn)
+            {
+                HintsBox.Text = "Click a box to view hints.";
+            }
+            else
+            {
+                HintsBox.Text = "Hints are currently turned off. You can turn them on from the options menu.";
             }
         }
 
@@ -285,6 +304,68 @@ namespace SuperSudoku
         }
 
         /// <summary>
+        /// Get's all the possible choices for a given row/col
+        /// </summary>
+        /// <param name="rowIn">The row of the gameboard to check for.</param>
+        /// <param name="colIn">The column of the gameboard to check for.</param>
+        /// <returns>List of possible values.</returns>
+        private IEnumerable<int> GetPossibleChoices(int rowIn, int colIn)
+        {
+            var sectionRow = rowIn/3;
+            var sectionCol = colIn/3;
+
+            var possibilities = new List<int>(); // the possibilities are endless
+            for (var i = 1; i < Max; i++)
+            {
+                var neverSeen = true;
+
+                // if this number is not the value in the current cell
+                if (Math.Abs(puzzleGrid.GetCell(rowIn, colIn)) != i)
+                {
+                    // check column
+                    for (var row = 0; row < GameBoardRows; row++)
+                    {
+                        // did we just see the number we're looking for in this column somehwere?
+                        if (Math.Abs(puzzleGrid.GetCell(row, colIn)) == i)
+                        {
+                            neverSeen = false;
+                        }
+                    }
+                    // check row
+                    for (var col = 0; col < GameBoardCols; col++)
+                    {
+                        if (Math.Abs(puzzleGrid.GetCell(rowIn, col)) == i)
+                        {
+                            neverSeen = false;
+                        }
+                    }
+                    // check current 9x9 grid 
+                    // loop through all the rows and columns
+                    for (var r = 0; r < GameBoardRows; r++)
+                    {
+                        for (var c = 0; c < GameBoardCols; c++)
+                        {
+                            // if we're in the same section and we found the number we're working on
+                            if (sectionRow == r / 3 && sectionCol == c / 3 &&
+                                Math.Abs(puzzleGrid.GetCell(r, c)) == i)
+                            {
+                                neverSeen = false;
+                            }
+                        }
+                    }
+                }
+
+                // if we've never seen the number, go ahead and add it to the possibilities
+                if (neverSeen)
+                {
+                    possibilities.Add(i);
+                }
+            }
+
+            return possibilities;
+        }
+
+        /// <summary>
         /// Checks if the game is in progress.
         /// </summary>
         /// <returns>True if a user editable field has a value in it, false otherwise.</returns>
@@ -324,6 +405,7 @@ namespace SuperSudoku
         private void AlwaysShowHintsChecked(object sender, RoutedEventArgs e)
         {
             showHintsOn = true;
+            SetHintsBoxToDefault();
         }
 
         /// <summary>
@@ -332,6 +414,7 @@ namespace SuperSudoku
         private void AlwaysShowHintsUnchecked(object sender, RoutedEventArgs e)
         {
             showHintsOn = false;
+            SetHintsBoxToDefault();
         }
 
         /// <summary>
@@ -379,6 +462,22 @@ namespace SuperSudoku
         /// </summary>
         private void GridElementGotFocus(object sender, RoutedEventArgs e)
         {
+            if (showHintsOn)
+            {
+                // get the row/column of the text box
+                var name = ((TextBox)sender).Name;
+                var rowCol = GetRowColumnFromTextboxName(name);
+                var row = rowCol.Item1;
+                var col = rowCol.Item2;
+
+                // get all the possible choices
+                var possibleChoices = GetPossibleChoices(row, col);
+
+                // put in text box
+                var hints = "Possible choice(s) for current cell: " + string.Join(", ", possibleChoices) + ".";
+                HintsBox.Text = hints;
+            }
+
             ((TextBox)sender).Style = (Style)(Resources["GridElementFocused"]);
         }
 
@@ -387,6 +486,10 @@ namespace SuperSudoku
         /// </summary>
         private void GridElementLostFocus(object sender, RoutedEventArgs e)
         {
+            if (showHintsOn)
+            {
+                SetHintsBoxToDefault();
+            }
             ((TextBox)sender).Style = (Style)(Resources["GridElement"]);
         }
 
