@@ -505,7 +505,7 @@ namespace SuperSudoku
         /// </summary>
         private void SolveNowClick(object sender, RoutedEventArgs e)
         {
-            var result = puzzleSolver.SolveGrid(puzzleGrid);
+            var result = puzzleSolver.SolveGrid(puzzleGrid, true);
             if (result == true)
             {
                 SetPuzzleGrid(puzzleSolver.SolutionGrid);
