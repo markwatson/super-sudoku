@@ -128,6 +128,32 @@ namespace SuperSudoku
         }
 
         /// <summary>
+        /// This function shows the hint text
+        /// </summary>
+        private void ShowHintText()
+        {
+            // get the row/column of the text box
+            if (Keyboard.FocusedElement != null && Keyboard.FocusedElement is TextBox)
+            {
+                var name = ((TextBox)Keyboard.FocusedElement).Name;
+                var rowCol = GetRowColumnFromTextboxName(name);
+                var row = rowCol.Item1;
+                var col = rowCol.Item2;
+
+                // get all the possible choices
+                var possibleChoices = GetPossibleChoices(row, col);
+
+                // put in text box
+                var hints = "Possible choice(s) for current cell: " + string.Join(", ", possibleChoices) + ".";
+                HintsBox.Text = hints;
+            }
+            else
+            {
+                SetHintsBoxToDefault();
+            }
+        }
+
+        /// <summary>
         /// The grid GUI elements are labeled by row and column.
         /// 
         /// Elements are in the form "_1x1" where the first number is the row and the second is the column.
@@ -406,6 +432,7 @@ namespace SuperSudoku
         {
             showHintsOn = true;
             SetHintsBoxToDefault();
+            ShowHintText();
         }
 
         /// <summary>
@@ -464,24 +491,17 @@ namespace SuperSudoku
         {
             if (showHintsOn)
             {
-                // get the row/column of the text box
-                var name = ((TextBox)sender).Name;
-                var rowCol = GetRowColumnFromTextboxName(name);
-                var row = rowCol.Item1;
-                var col = rowCol.Item2;
-
-                // get all the possible choices
-                var possibleChoices = GetPossibleChoices(row, col);
-
-                // put in text box
-                var hints = "Possible choice(s) for current cell: " + string.Join(", ", possibleChoices) + ".";
-                HintsBox.Text = hints;
+                ShowHintText();
+            }
+            else
+            {
+                SetHintsBoxToDefault();
             }
 
             ((TextBox)sender).Style = (Style)(Resources["GridElementFocused"]);
         }
 
-        /// <summary>
+	    /// <summary>
         /// This function is called when a grid element no longer has focus.
         /// </summary>
         private void GridElementLostFocus(object sender, RoutedEventArgs e)
@@ -651,5 +671,15 @@ namespace SuperSudoku
                 puzzleGrid = newPuzzleGrid;
             }
         }
+
+        private void ShowHintClick(object sender, RoutedEventArgs e)
+        {
+            ShowHintText();
+        }
+
+	    private void FillInAnswerClick(object sender, RoutedEventArgs e)
+	    {
+	        throw new NotImplementedException();
+	    }
 	}
 }
