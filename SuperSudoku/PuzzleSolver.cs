@@ -185,7 +185,7 @@ namespace SuperSudoku
                         }
                     }
                 }
-            } while(anyChanges == false);
+            } while(anyChanges == false && !IsSolved(grid));
 
         }
 
@@ -295,6 +295,7 @@ namespace SuperSudoku
                     numSolns++;
                     final[numSolns] = (PuzzleGrid)g.Clone();
                     result = true;
+                    SolutionGrid = grid;
                 }
             }
             else
