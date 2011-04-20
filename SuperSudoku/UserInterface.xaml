@@ -122,7 +122,7 @@
 		</Rectangle>
         <Grid>
             <UniformGrid x:Name="Grid1" Margin="0,21,0,0" Height="120" VerticalAlignment="Top" HorizontalAlignment="Left" Width="120" Rows="3" Columns="3">
-                <TextBox x:Name="_1x1" Style="{StaticResource GridElement}" GotFocus="GridElementGotFocus" LostFocus="GridElementLostFocus" KeyDown="GridElementKeyDown" PreviewKeyDown="GridElementPreviewKeyDown" TabIndex="0" />
+                <TextBox x:Name="_1x1" Style="{StaticResource GridElement}" GotFocus="GridElementGotFocus" LostFocus="GridElementLostFocus" KeyDown="GridElementKeyDown" PreviewKeyDown="GridElementPreviewKeyDown" TabIndex="0" Loaded="GameWindowLoaded" />
                 <TextBox x:Name="_1x2" Style="{StaticResource GridElement}" GotFocus="GridElementGotFocus" LostFocus="GridElementLostFocus" KeyDown="GridElementKeyDown" PreviewKeyDown="GridElementPreviewKeyDown" TabIndex="1" />
                 <TextBox x:Name="_1x3" Style="{StaticResource GridElement}" GotFocus="GridElementGotFocus" LostFocus="GridElementLostFocus" KeyDown="GridElementKeyDown" PreviewKeyDown="GridElementPreviewKeyDown" TabIndex="2" />
                 <TextBox x:Name="_2x1" Style="{StaticResource GridElement}" GotFocus="GridElementGotFocus" LostFocus="GridElementLostFocus" KeyDown="GridElementKeyDown" PreviewKeyDown="GridElementPreviewKeyDown" TabIndex="3" />

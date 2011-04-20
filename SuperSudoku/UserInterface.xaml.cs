@@ -54,7 +54,8 @@ namespace SuperSudoku
             saveGameDialog = new SaveFileDialog {Filter = "Sudoku Games | *.sud", DefaultExt = ".sud"};
             openGameDialog = new OpenFileDialog {Filter = "Sudoku Games | *.sud", DefaultExt = ".sud"};
 
-            SetPuzzleGrid(new PuzzleGrid());
+            puzzleGrid = new PuzzleGrid();
+            SetPuzzleGrid(puzzleGrid);
 
             SetHintsBoxToDefault();
 		}
@@ -416,6 +417,24 @@ namespace SuperSudoku
             return inProgress;
         }
 
+        /// <summary>
+        /// Creates a new game.
+        /// </summary>
+        private void MakeNewGame(bool noCancel=false)
+        {
+            var dlg = new NewGameDifficultyDialogBox(noCancel) {Owner = this};
+            dlg.ShowDialog();
+            var difficulty = dlg.HowHard;
+
+            if (dlg.CreateGame)
+            {
+                var puzzleGenerator = new PuzzleGenerator(difficulty);
+                var newPuzzleGrid = puzzleGenerator.InitGrid();
+                SetPuzzleGrid(newPuzzleGrid);
+                puzzleGrid = newPuzzleGrid;
+            }
+        }
+
         // The following methods are GUI event handlers. The two arguments are the same for all event handlers.
         /// <summary>
         /// This function is called when the exit menu item is clicked.
@@ -659,18 +678,7 @@ namespace SuperSudoku
             }
 
             // create new game
-            // choose difficulty
-            var dlg = new NewGameDifficultyDialogBox {Owner = this};
-            dlg.ShowDialog();
-            var difficulty = dlg.HowHard;
-
-            if (dlg.CreateGame)
-            {
-                var puzzleGenerator = new PuzzleGenerator(difficulty);
-                var newPuzzleGrid = puzzleGenerator.InitGrid();
-                SetPuzzleGrid(newPuzzleGrid);
-                puzzleGrid = newPuzzleGrid;
-            }
+            MakeNewGame();
         }
 
         private void ShowHintClick(object sender, RoutedEventArgs e)
@@ -682,5 +690,10 @@ namespace SuperSudoku
 	    {
 	        throw new NotImplementedException();
 	    }
+
+        private void GameWindowLoaded(object sender, RoutedEventArgs e)
+        {
+            MakeNewGame(true);
+        }
 	}
 }

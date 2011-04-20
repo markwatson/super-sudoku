@@ -31,12 +31,16 @@ namespace SuperSudoku
         /// <summary>
         /// Construct me a boat.
         /// </summary>
-        public NewGameDifficultyDialogBox()
+        public NewGameDifficultyDialogBox(bool noCancel=false)
         {
             InitializeComponent();
 
             HowHard = Difficulty.Easy;
             CreateGame = false;
+            if (noCancel)
+            {
+                cancelButton.Visibility = Visibility.Hidden;
+            }
         }
 
         /// <summary>
