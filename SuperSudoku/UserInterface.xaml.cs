@@ -469,12 +469,8 @@ namespace SuperSudoku
 
             if (dlg.CreateGame)
             {
-                PuzzleGrid newPuzzleGrid;
-                do
-                {
-                    var puzzleGenerator = new PuzzleGenerator(difficulty);
-                    newPuzzleGrid = puzzleGenerator.InitGrid();
-                } while (newPuzzleGrid.IsBlank());
+                var puzzleGenerator = new PuzzleGenerator(difficulty);
+                PuzzleGrid newPuzzleGrid = puzzleGenerator.InitGrid();
 
                 SetPuzzleGrid(newPuzzleGrid);
                 puzzleGrid = newPuzzleGrid;

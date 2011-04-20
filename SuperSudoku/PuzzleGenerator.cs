@@ -87,6 +87,7 @@ namespace SuperSudoku
 		    }
             do
             {
+                puzzleSolver = new PuzzleSolver();
                 puzzleSolver.SolveGrid((PuzzleGrid)tempGrid.Clone(), false); //Slv to fill remainder of grid
                 solutionGrid = puzzleSolver.SolutionGrid;
             } while (solutionGrid == null || solutionGrid.IsBlank());
