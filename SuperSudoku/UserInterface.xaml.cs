@@ -790,7 +790,36 @@ namespace SuperSudoku
 
 	    private void FillInAnswerClick(object sender, RoutedEventArgs e)
 	    {
-	        throw new NotImplementedException();
+            // get the row/column of the text box
+            if (Keyboard.FocusedElement != null && Keyboard.FocusedElement is TextBox)
+            {
+                var element = (TextBox)Keyboard.FocusedElement;
+                var rowCol = GetRowColumnFromTextboxName(element.Name);
+                var row = rowCol.Item1;
+                var col = rowCol.Item2;
+
+                var tmpPuzzleGrid = (PuzzleGrid)puzzleGrid.Clone();
+	            for (int i = 0; i < Max; i++)
+	            {
+	                for (int j = 0; j < Max; j++)
+	                {
+	                    if (tmpPuzzleGrid.Grid[i,j] > 0)
+	                    {
+	                        tmpPuzzleGrid.InitSetCell(i, j, 0);
+	                    }
+	                }
+	            }
+                puzzleSolver = new PuzzleSolver();
+                var result = puzzleSolver.SolveGrid(tmpPuzzleGrid, true);
+                if (result)
+                {
+                    SetGridElement(row, col, puzzleSolver.SolutionGrid.Grid[row, col], element);
+                }
+                else
+                {
+                    MessageBox.Show("The current puzzle cannot be solved so we can't fill in that space.");
+                }
+            }
 	    }
 
         private void GameWindowLoaded(object sender, RoutedEventArgs e)
