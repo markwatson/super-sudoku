@@ -414,7 +414,7 @@ namespace SuperSudoku
             var sectionCol = colIn/3;
 
             var possibilities = new List<int>(); // the possibilities are endless
-            for (var i = 1; i < Max; i++)
+            for (var i = 1; i < Max+1; i++)
             {
                 var tmpPuzzleGrid = (PuzzleGrid) puzzleGrid.Clone();
                 if (onlyCheckSetVals)
