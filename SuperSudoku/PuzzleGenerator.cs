@@ -12,7 +12,7 @@ namespace SuperSudoku
 
     class PuzzleGenerator
     {
-        private readonly PuzzleSolver puzzleSolver;
+        private PuzzleSolver puzzleSolver;
 
         /// <summary>
         /// 
@@ -33,9 +33,9 @@ namespace SuperSudoku
         /// This constructs a puzzle generator class.
         /// </summary>
         /// <param name="puzzleSolverIn">The instance of the puzzle solver from UserInterface.</param>
-        public PuzzleGenerator(PuzzleSolver puzzleSolverIn, Difficulty difficultyIn)
+        public PuzzleGenerator(Difficulty difficultyIn)
         {
-            puzzleSolver = puzzleSolverIn;
+            puzzleSolver = new PuzzleSolver();
             difficulty = difficultyIn;
         }
 
@@ -70,7 +70,7 @@ namespace SuperSudoku
 		                                          //values in rows 1,2 of col 0
 			    randIndex = rnd.Next(0,valueSet2.Count);
 			    newVal = valueSet2[randIndex];
-			    while((newVal == tempGrid.GetCell(1,0)||(newVal == tempGrid.GetCell(2,0))))
+			    while((newVal == tempGrid.Grid[1,0]||(newVal == tempGrid.Grid[2,0])))
 			    {
 				    randIndex = rnd.Next(0,valueSet2.Count);
 				    newVal = valueSet2[randIndex];
@@ -129,7 +129,8 @@ namespace SuperSudoku
 		    	saveCopy = (PuzzleGrid)tempGrid.Clone();     // in case undo needed
     	    	tempGrid = RandomlyBlank(tempGrid, symmetry, ref totalBlanks);
 			               //blanks 1 or 2 squares according to symmetry chosen
-                unique = puzzleSolver.SolveGrid(tempGrid, true);         // will it solve uniquely?
+                puzzleSolver = new PuzzleSolver();
+                unique = puzzleSolver.SolveGrid((PuzzleGrid)tempGrid.Clone(), true);         // will it solve uniquely?
 		    	if(!unique)
 		    	{
 			    	tempGrid = (PuzzleGrid)saveCopy.Clone();
@@ -137,46 +138,49 @@ namespace SuperSudoku
 			    }
 		    } while((totalBlanks < desiredBlanks) && (tries < 1000));
             solvedGrid = tempGrid;
+            solvedGrid.Finish();
             return solvedGrid;
 	    }
 
         public PuzzleGrid RandomlyBlank(PuzzleGrid tempGrid, int sym, ref int blankCount)
-        {       //blank one or two squares(depending on if on center line) randomly
-            Random rnd = new Random();             //allow random number generation
-            int row = rnd.Next(0, 8);                      //choose randomly the row
-            int column = rnd.Next(0, 8);               //and column of cell to blank
-            while (tempGrid.GetCell(row, column) == 0)      //don't blank a blank cell
+        {
+            //blank one or two squares(depending on if on center line) randomly
+            Random rnd = new Random(); //allow random number generation
+            int row = rnd.Next(0, 8); //choose randomly the row
+            int column = rnd.Next(0, 8); //and column of cell to blank
+            while (tempGrid.Grid[row, column] == 0) //don't blank a blank cell
             {
                 row = rnd.Next(0, 8);
                 column = rnd.Next(0, 8);
             }
-            tempGrid.InitSetCell(row, column, 0);                 //clear chosen cell
-            blankCount++;                           //increment the count of blanks
+            tempGrid.InitSetCell(row, column, 0); //clear chosen cell
+            blankCount++; //increment the count of blanks
             switch (sym)
-            {                              //based on symmetry, blank a second cell
-                case 0:                                             //vertical symmetry
-                    if (tempGrid.GetCell(row, 8 - column) != 0)  //if not already blanked
-                        blankCount++;                         //increment blank counter
-                    tempGrid.InitSetCell(row, 8 - column, 0);         //blank opposite cell
+            {
+                    //based on symmetry, blank a second cell
+                case 0: //vertical symmetry
+                    if (tempGrid.Grid[row, 8 - column] != 0) //if not already blanked
+                        blankCount++; //increment blank counter
+                    tempGrid.InitSetCell(row, 8 - column, 0); //blank opposite cell
                     break;
-                case 1:                                           //horizontal symmetry
-                    if (tempGrid.GetCell(8 - row, column) != 0)
+                case 1: //horizontal symmetry
+                    if (tempGrid.Grid[8 - row, column] != 0)
                         blankCount++;
                     tempGrid.InitSetCell(8 - row, column, 0);
                     break;
-                case 2:                                             //diagonal symmetry
-                    if (tempGrid.GetCell(column, row) != 0)
+                case 2: //diagonal symmetry
+                    if (tempGrid.Grid[column, row] != 0)
                         blankCount++;
                     tempGrid.InitSetCell(column, row, 0);
                     break;
-                default:                                            //diagonal symmetry
-                    if (tempGrid.GetCell(row, 8 - column) != 0)
+                default: //diagonal symmetry
+                    if (tempGrid.Grid[row, 8 - column] != 0)
                         blankCount++;
                     tempGrid.InitSetCell(column, row, 0);
                     break;
             }
             return tempGrid;
-        }  
+        }
 
     }
 }

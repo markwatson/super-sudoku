@@ -45,7 +45,7 @@ namespace SuperSudoku
                 c = 0;
                 while (result == true && c < 9)            //Check every column
                 {                //If an empty cell is found, result gets FALSE
-                    result = (result && grid.GetCell(r, c) != 0);
+                    result = (result && grid.Grid[r, c] != 0);
                     c++;
                 }
                 r++;
@@ -118,7 +118,7 @@ namespace SuperSudoku
             bool result = false;
             for (int i = 0; i < 9; i++)                   //Iterate through row
             {                          //check if cell holds value being sought
-                result = result || (Math.Abs(grid.GetCell(row, i)) == value);
+                result = result || (Math.Abs(grid.Grid[row, i]) == value);
             }
             return result;
         }
@@ -134,7 +134,7 @@ namespace SuperSudoku
             bool result = false;
             for (int i = 0; i < 9; i++)                //Iterate through column
             {                          //check if cell holds value being sought
-                result = result || (Math.Abs(grid.GetCell(i, col)) == value);
+                result = result || (Math.Abs(grid.Grid[i, col]) == value);
             }
             return result;
         }
@@ -176,7 +176,7 @@ namespace SuperSudoku
             {
                 for (int j = cLow; j < cLow + 3; j++)     //Check all 3 columns
                 {               //Compare value of cell with value being sought
-                    if (Math.Abs(g.GetCell(i, j)) == value)
+                    if (Math.Abs(g.Grid[i, j]) == value)
                     {
                         result = true;
                     }
@@ -242,14 +242,14 @@ namespace SuperSudoku
                 {
                     for (int j = 0; j < 9; j++)  //Iterate through every column
                     {
-                        if (grid.GetCell(i, j) == 0)
+                        if (grid.Grid[i, j] == 0)
                         {       //Get number of choices available in grid[i, j]
                             numChoices = ListPossible(i, j, grid);
                             if (numChoices == 1) //If only one choice set value
                             {
                                 grid.UserSetCell(i, j, FirstTrue());
                                               //Changes made, anyChanges = true
-                                anyChanges = (grid.GetCell(i, j) != 0);
+                                anyChanges = (grid.Grid[i, j] != 0);
                             }
                         }
                     }
@@ -286,7 +286,7 @@ namespace SuperSudoku
                 j = 0;
                 while (!bad && j < 9) //not a bad solutn and trying valid column
                 {
-                    if (grid.GetCell(i, j) == 0)
+                    if (grid.Grid[i, j] == 0)
                     {
                         numCh = ListPossible(i, j, grid);    //Get # of choices
                         if (numCh == 0)     //If no choices found, bad solution

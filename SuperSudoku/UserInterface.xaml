@@ -245,7 +245,7 @@
 					<TranslateTransform/>
 				</TransformGroup>
 			</Menu.RenderTransform>
-			<TextBlock TextWrapping="Wrap" Text="This puzzle cannot be solved." RenderTransformOrigin="2.021,0" Width="350.987" IsEnabled="False" Foreground="#FF252525">
+			<TextBlock TextWrapping="Wrap" RenderTransformOrigin="2.021,0" Width="350.987" IsEnabled="False" Foreground="#FF252525">
 				<TextBlock.RenderTransform>
 					<TransformGroup>
 						<ScaleTransform ScaleY="-1"/>

@@ -23,7 +23,7 @@ namespace SuperSudoku
                 string currentLine = "";
 	            for(j = 0; j < 9; j++)
 	            {	
-		            cellVal = board.GetCell(i,j);
+		            cellVal = board.Grid[i,j];
 		            if(cellVal < 0)
 		            {
                         currentLine += Math.Abs(cellVal).ToString();

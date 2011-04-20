@@ -10,7 +10,7 @@ namespace SuperSudoku
         /// This is the internal grid element.
         /// Reading of the private grid element is allowed. Setting it is not allowed.
         /// </summary>
-        private int[,] grid;
+        public int[,] Grid;
 
         /// <summary>
         /// Max number in any part of the array
@@ -22,7 +22,7 @@ namespace SuperSudoku
         /// </summary>
         public PuzzleGrid()
         {
-            grid = new int[9,9];
+            Grid = new int[9,9];
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace SuperSudoku
             // if everything is valid proceed
             if (validIndex && validNewVal)
             {
-                grid[rowA, columnB] = value;
+                Grid[rowA, columnB] = value;
                 success = 1;
             }
             else
@@ -90,14 +90,14 @@ namespace SuperSudoku
             }
 
             // confirm value in location is replaceable
-            if (grid[rowA, columnB] >= 0)
+            if (Grid[rowA, columnB] >= 0)
             {
                 canReplace = true; 
             }
                 
             if (validIndex && validNewVal && canReplace)
             {
-                grid[rowA, columnB] = value;
+                Grid[rowA, columnB] = value;
                 success = 1;
             }
             else
@@ -109,21 +109,17 @@ namespace SuperSudoku
         }
 
         /// <summary>
-        /// Return cell value for comparisons, etc.
+        /// This function makes sure all this grid's values are non-editable
         /// </summary>
-        /// <param name="rowA">The 0-based row number.</param>
-        /// <param name="columnB">The 0-based column number.</param>
-        /// <returns>0 for a failure.</returns>
-        public int GetCell(int rowA, int columnB)
+        public void Finish()
         {
-            var ret = 0;
-
-            if (rowA >= 0 && rowA < 9 && columnB >= 0 && columnB < 9)
+            for (var i = 0; i < Max; i++)
             {
-                ret = grid[rowA, columnB];
+                for (var j = 0; j < Max; j++)
+                {
+                    Grid[i, j] = Math.Abs(Grid[i, j]) * -1;
+                }
             }
-
-            return ret;
         }
 
         /// <summary>
@@ -138,7 +134,7 @@ namespace SuperSudoku
             {
                 for (int j = 0; j < Max; j++)
                 {
-                    p.InitSetCell(i, j, GetCell(i, j));
+                    p.InitSetCell(i, j, Grid[i, j]);
                 }
             }
             return p;

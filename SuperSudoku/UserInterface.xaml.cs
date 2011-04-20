@@ -14,7 +14,7 @@ namespace SuperSudoku
 	{
         // Game elements are implemented in seperate classes and instantiated to properties of this class here:
         private readonly FileHandler fileHandler;
-	    private readonly PuzzleSolver puzzleSolver;
+	    private PuzzleSolver puzzleSolver;
 	    private PuzzleGrid puzzleGrid;
 
         // game grid size
@@ -45,8 +45,10 @@ namespace SuperSudoku
 
             // Initialize game elements
             fileHandler = new FileHandler();
-            puzzleSolver = new PuzzleSolver();
-            puzzleGrid = new PuzzleGrid();
+
+            //puzzleSolver = new PuzzleSolver();
+            //var result = puzzleSolver.SolveGrid(puzzleGrid, true);
+            //StatusBarText.Text = result ? "This puzzle has a solution solved." : "This puzzle cannot be solved.";
 
 			// Initialize the save game dialog
             saveGameDialog = new SaveFileDialog {Filter = "Sudoku Games | *.sud", DefaultExt = ".sud"};
@@ -307,14 +309,14 @@ namespace SuperSudoku
                     {
                         box.Style = (Style)(Resources["GridElement"]);
 
-                        if (grid.GetCell(i,j) < 0)
+                        if (grid.Grid[i,j] < 0)
                         {
-                            box.Text = ((-1) * grid.GetCell(i,j)).ToString();
+                            box.Text = ((-1) * grid.Grid[i,j]).ToString();
                             box.Style = (Style)(Resources["GridElementDisabled"]);
                         }
-                        else if (grid.GetCell(i,j) > 0)
+                        else if (grid.Grid[i,j] > 0)
                         {
-                            box.Text = grid.GetCell(i, j).ToString();
+                            box.Text = grid.Grid[i, j].ToString();
                         }
                         else
                         {
@@ -344,13 +346,13 @@ namespace SuperSudoku
                 var neverSeen = true;
 
                 // if this number is not the value in the current cell
-                if (Math.Abs(puzzleGrid.GetCell(rowIn, colIn)) != i)
+                if (Math.Abs(puzzleGrid.Grid[rowIn, colIn]) != i)
                 {
                     // check column
                     for (var row = 0; row < GameBoardRows; row++)
                     {
                         // did we just see the number we're looking for in this column somehwere?
-                        if (Math.Abs(puzzleGrid.GetCell(row, colIn)) == i)
+                        if (Math.Abs(puzzleGrid.Grid[row, colIn]) == i)
                         {
                             neverSeen = false;
                         }
@@ -358,7 +360,7 @@ namespace SuperSudoku
                     // check row
                     for (var col = 0; col < GameBoardCols; col++)
                     {
-                        if (Math.Abs(puzzleGrid.GetCell(rowIn, col)) == i)
+                        if (Math.Abs(puzzleGrid.Grid[rowIn, col]) == i)
                         {
                             neverSeen = false;
                         }
@@ -371,7 +373,7 @@ namespace SuperSudoku
                         {
                             // if we're in the same section and we found the number we're working on
                             if (sectionRow == r / 3 && sectionCol == c / 3 &&
-                                Math.Abs(puzzleGrid.GetCell(r, c)) == i)
+                                Math.Abs(puzzleGrid.Grid[r, c]) == i)
                             {
                                 neverSeen = false;
                             }
@@ -400,7 +402,7 @@ namespace SuperSudoku
             {
                 for (int j = 0; j < GameBoardCols; j++)
                 {
-                    sum += puzzleGrid.GetCell(i, j);
+                    sum += puzzleGrid.Grid[i, j];
                 }
             }
 
@@ -626,11 +628,12 @@ namespace SuperSudoku
         /// </summary>
         private void SolveNowClick(object sender, RoutedEventArgs e)
         {
+            puzzleSolver = new PuzzleSolver();
             var result = puzzleSolver.SolveGrid(puzzleGrid, true);
             if (result == true)
             {
                 SetPuzzleGrid(puzzleSolver.SolutionGrid);
-                MessageBox.Show("The current puzzle hass been solved.");
+                MessageBox.Show("The current puzzle has been solved.");
             }
             else
             {
@@ -663,7 +666,7 @@ namespace SuperSudoku
 
             if (dlg.CreateGame)
             {
-                var puzzleGenerator = new PuzzleGenerator(puzzleSolver, difficulty);
+                var puzzleGenerator = new PuzzleGenerator(difficulty);
                 var newPuzzleGrid = puzzleGenerator.InitGrid();
                 SetPuzzleGrid(newPuzzleGrid);
                 puzzleGrid = newPuzzleGrid;
