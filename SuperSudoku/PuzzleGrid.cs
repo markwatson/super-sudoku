@@ -139,5 +139,22 @@ namespace SuperSudoku
             }
             return p;
         }
+
+        public bool IsBlank()
+        {
+            var isBlank = true;
+            for (var i = 0; i < Max; i++)
+            {
+                for (var j = 0; j < Max; j++)
+                {
+                    if (Grid[i,j] != 0)
+                    {
+                        isBlank = false;
+                    }
+                }
+            }
+
+            return isBlank;
+        }
     }
 }

@@ -85,8 +85,11 @@ namespace SuperSudoku
 			    valueSet2.Remove(newVal);
 			    tempGrid.InitSetCell(row,col,newVal);
 		    }
-		    solved = puzzleSolver.SolveGrid(tempGrid, false); //Slv to fill remainder of grid
-		    solutionGrid = puzzleSolver.SolutionGrid;
+            do
+            {
+                puzzleSolver.SolveGrid((PuzzleGrid)tempGrid.Clone(), false); //Slv to fill remainder of grid
+                solutionGrid = puzzleSolver.SolutionGrid;
+            } while (solutionGrid == null || solutionGrid.IsBlank());
             permaGrid = Blanker(solutionGrid);       //call Blanker to carry out the
             return permaGrid;         //blanking of fileds,then return the grid to user to solve
 	    }

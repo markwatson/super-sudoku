@@ -19,6 +19,8 @@ namespace SuperSudoku
         PuzzleGrid[] final;                          //Array of found solutions
         int numSolns;                               //Number of solutions found
         bool stoplooking;                      //Stop trying to find a solution
+        int recursions;                       // count the number of recursions
+        const int MaxDepth = 1000;   // upper limit on the number of recursions
         
 
         public PuzzleSolver()
@@ -354,6 +356,7 @@ namespace SuperSudoku
             int i, choice, r, c, numChoices;
             bool done, got_one, solved, result;
             got_one = false;
+            recursions++;
             FillSingleChoices(grid);  //First, fill in all single choice values
             if (IsSolved(grid))                        //If it's already solved
             {
@@ -387,8 +390,15 @@ namespace SuperSudoku
                         list[choice] = false;      //Won't want to use it again
                         grid.UserSetCell(r, c, choice);
 
+                        if (recursions < MaxDepth)
+                        {
                        //-----------We must go deeper. SUDCEPTION!-----------//
-                        solved = (SolveGrid(grid, checkUnique));      //Recurse
+                             solved = (SolveGrid(grid, checkUnique)); //Recurse
+                        }
+                        else
+                        {
+                            solved = false;
+                        }
                         if (stoplooking == true)
                         {
                             done = true;
@@ -396,7 +406,7 @@ namespace SuperSudoku
                         }
                         else
                         {
-                            got_one = (got_one || solved);     //If either true
+                            got_one = (got_one || solved);
                             if (!checkUnique)  //If not looking for unique soln
                             {
                                 done = got_one;       //Then we have a solution

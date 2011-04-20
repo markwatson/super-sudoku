@@ -469,8 +469,13 @@ namespace SuperSudoku
 
             if (dlg.CreateGame)
             {
-                var puzzleGenerator = new PuzzleGenerator(difficulty);
-                var newPuzzleGrid = puzzleGenerator.InitGrid();
+                PuzzleGrid newPuzzleGrid;
+                do
+                {
+                    var puzzleGenerator = new PuzzleGenerator(difficulty);
+                    newPuzzleGrid = puzzleGenerator.InitGrid();
+                } while (newPuzzleGrid.IsBlank());
+
                 SetPuzzleGrid(newPuzzleGrid);
                 puzzleGrid = newPuzzleGrid;
             }
@@ -697,7 +702,6 @@ namespace SuperSudoku
             }
             else
             {
-                SetPuzzleGrid(puzzleSolver.SolutionGrid);
                 MessageBox.Show("The current puzzle cannot be solved.");
             }
         }
