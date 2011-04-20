@@ -387,6 +387,34 @@ namespace SuperSudoku
         /// <param name="sender">The grid object</param>
         private void SetGridElement(int row, int col, int val, object sender)
         {
+            // check if they won
+            var zeros = 0;
+            for (var i = 0; i < Max; i++)
+            {
+                for (var j = 0; j < Max; j++)
+                {
+                    if (puzzleGrid.Grid[i,j] == 0)
+                    {
+                        zeros++;
+                    }
+                }
+            }
+            if (zeros < 1)
+            {
+                // check solution
+                puzzleSolver = new PuzzleSolver();
+                var result = puzzleSolver.SolveGrid((PuzzleGrid)puzzleGrid.Clone(), true);
+                if (result)
+                {
+                    MessageBox.Show("Congrats, you finished the puzzle!");
+                }
+                else
+                {
+                    MessageBox.Show("There are errors in your puzzle.");
+                    showErrorsOn = true;
+                }
+            }
+
             if (showErrorsOn)
             {
                 var possibilities = ((List<int>) GetPossibleChoices(row, col, true));
@@ -759,6 +787,7 @@ namespace SuperSudoku
                 if (result == true)
                 {
                     SetPuzzleGrid(puzzleSolver.SolutionGrid);
+                    puzzleGrid = (PuzzleGrid)puzzleSolver.SolutionGrid.Clone();
                     MessageBox.Show("The current puzzle has been solved.");
                 }
                 else
