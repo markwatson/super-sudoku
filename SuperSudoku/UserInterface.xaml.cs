@@ -766,5 +766,20 @@ namespace SuperSudoku
                 MessageBox.Show("That puzzle is not solvable, please modify it so that it is.");
             }
 	    }
+
+        private void GameRulesClick(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Sudoku is the name of a popular number-based logic game which challenges the " +
+            "player to complete a 9 x 9 grid of squares, each containing either the digits one " +
+            "through nine or a blank, by filling in the blank squares.  The object of the game is " +
+            "to place numbers into the empty squares so that each row, each column and  " +
+            "each of the nine 3 x 3 sub-grids within the larger 9 x 9 grid contains the numbers " +
+            "one through nine once.");
+        }
+
+	    private void AboutClick(object sender, RoutedEventArgs e)
+	    {
+            MessageBox.Show("SuperSudoku 1.0\n\nSmile and be green :)");
+	    }
 	}
 }

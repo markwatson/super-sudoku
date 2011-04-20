@@ -108,8 +108,8 @@
 				<MenuItem x:Name="ShowErrors" Header="Show Errors" IsCheckable="True" Checked="ShowErrorsChecked" Unchecked="ShowErrorsUnchecked" />
 			</MenuItem>
 			<MenuItem x:Name="HelpMenu" Header="Help">
-				<MenuItem x:Name="GameRules" Header="Game Rules"/>
-				<MenuItem x:Name="About" Header="Help"/>
+				<MenuItem x:Name="GameRules" Header="Game Rules" Click="GameRulesClick" />
+                <MenuItem x:Name="About" Header="About" Click="AboutClick" />
 			</MenuItem>
 		</Menu>
 		<Rectangle Margin="0,21,0,0" Stroke="Black" HorizontalAlignment="Left" Width="368" Height="368" VerticalAlignment="Top">
