@@ -17,12 +17,12 @@ namespace SuperSudoku
         /// <summary>
         /// 
         /// </summary>
-        public PuzzleGrid permaGrid;
+        public PuzzleGrid PermaGrid;
 
         /// <summary>
         /// 
         /// </summary>
-        public PuzzleGrid solutionGrid;
+        public PuzzleGrid SolutionGrid;
 
         /// <summary>
         /// 
@@ -32,7 +32,7 @@ namespace SuperSudoku
         /// <summary>
         /// This constructs a puzzle generator class.
         /// </summary>
-        /// <param name="puzzleSolverIn">The instance of the puzzle solver from UserInterface.</param>
+        /// <param name="difficultyIn">The difficulty to generate a new puzzle.</param>
         public PuzzleGenerator(Difficulty difficultyIn)
         {
             puzzleSolver = new PuzzleSolver();
@@ -89,10 +89,10 @@ namespace SuperSudoku
             {
                 puzzleSolver = new PuzzleSolver();
                 puzzleSolver.SolveGrid((PuzzleGrid)tempGrid.Clone(), false); //Slv to fill remainder of grid
-                solutionGrid = puzzleSolver.SolutionGrid;
-            } while (solutionGrid == null || solutionGrid.IsBlank());
-            permaGrid = Blanker(solutionGrid);       //call Blanker to carry out the
-            return permaGrid;         //blanking of fileds,then return the grid to user to solve
+                SolutionGrid = puzzleSolver.SolutionGrid;
+            } while (SolutionGrid == null || SolutionGrid.IsBlank());
+            PermaGrid = Blanker(SolutionGrid);       //call Blanker to carry out the
+            return PermaGrid;         //blanking of fileds,then return the grid to user to solve
 	    }
         //	Call SolveGrid to solve puzzlegrid
         //Store solved gamegrid as the correct solution in solutiongrid
