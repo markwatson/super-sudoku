@@ -15,7 +15,6 @@ namespace SuperSudoku
         // Game elements are implemented in seperate classes and instantiated to properties of this class here:
         private readonly FileHandler fileHandler;
 	    private readonly PuzzleSolver puzzleSolver;
-	    private readonly PuzzleGenerator puzzleGenerator;
 	    private PuzzleGrid puzzleGrid;
 
         // game grid size
@@ -47,7 +46,6 @@ namespace SuperSudoku
             // Initialize game elements
             fileHandler = new FileHandler();
             puzzleSolver = new PuzzleSolver();
-            puzzleGenerator = new PuzzleGenerator(puzzleSolver, 0);
             puzzleGrid = new PuzzleGrid();
 
 			// Initialize the save game dialog
@@ -665,8 +663,8 @@ namespace SuperSudoku
 
             if (dlg.CreateGame)
             {
-                //TODO: make the generator generate a new puzzle, pass in difficulty.
-                var newPuzzleGrid = new PuzzleGrid();
+                var puzzleGenerator = new PuzzleGenerator(puzzleSolver, difficulty);
+                var newPuzzleGrid = puzzleGenerator.InitGrid();
                 SetPuzzleGrid(newPuzzleGrid);
                 puzzleGrid = newPuzzleGrid;
             }

@@ -13,11 +13,6 @@ using System.Windows.Shapes;
 
 namespace SuperSudoku
 {
-    public enum Difficulty
-    {
-        Easy, Medium, Hard
-    }
-
     /// <summary>
     /// Interaction logic for the new game box.
     /// </summary>

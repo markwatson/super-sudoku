@@ -5,6 +5,11 @@ using System.Text;
 
 namespace SuperSudoku
 {
+    public enum Difficulty
+    {
+        Easy, Medium, Hard
+    }
+
     class PuzzleGenerator
     {
         private readonly PuzzleSolver puzzleSolver;
@@ -22,13 +27,13 @@ namespace SuperSudoku
         /// <summary>
         /// 
         /// </summary>
-        private int difficulty;
+        private Difficulty difficulty;
 
         /// <summary>
         /// This constructs a puzzle generator class.
         /// </summary>
         /// <param name="puzzleSolverIn">The instance of the puzzle solver from UserInterface.</param>
-        public PuzzleGenerator(PuzzleSolver puzzleSolverIn, int difficultyIn)
+        public PuzzleGenerator(PuzzleSolver puzzleSolverIn, Difficulty difficultyIn)
         {
             puzzleSolver = puzzleSolverIn;
             difficulty = difficultyIn;
@@ -41,7 +46,7 @@ namespace SuperSudoku
 		    int col = 0;                        //variable for navigating 'columns'
 		    int newVal;                                  //value to place into grid
             bool solved;
-		    List<int> valueSet = new List<int>(Enumerable.Range(-9, -1));   //range 
+		    List<int> valueSet = new List<int>(Enumerable.Range(-9, 9));   //range 
 		                             //of numbers that can be added to the grid
 		    List<int> valueSet2 = new List<int>(); //placeholder values in column 0
 		    Random rnd = new Random(); //random variable for choosing random number
@@ -104,13 +109,13 @@ namespace SuperSudoku
 		
 		    switch (difficulty)           //set desiredBlanks via chosen difficulty
 		    {
-		    case 0: //easy difficulty
+		    case Difficulty.Easy: //easy difficulty
 			    desiredBlanks = 40;
 			    break;
-		    case 1: //medium difficulty
+		    case Difficulty.Medium: //medium difficulty
 		    	desiredBlanks = 45;
 		    	break;
-		    case 2: //hard difficulty
+		    case Difficulty.Hard: //hard difficulty
 		    	desiredBlanks = 50;
 		    	break;
 		    default: //easy difficulty
