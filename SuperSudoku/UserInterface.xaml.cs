@@ -400,15 +400,15 @@ namespace SuperSudoku
             puzzleGrid.InitSetCell(row, col, val);
         }
 
-        
 
-        /// <summary>
-        /// Get's all the possible choices for a given row/col
-        /// </summary>
-        /// <param name="rowIn">The row of the gameboard to check for.</param>
-        /// <param name="colIn">The column of the gameboard to check for.</param>
-        /// <returns>List of possible values.</returns>
-        private IEnumerable<int> GetPossibleChoices(int rowIn, int colIn, bool onlyCheckSetVals=false)
+	    /// <summary>
+	    /// Get's all the possible choices for a given row/col
+	    /// </summary>
+	    /// <param name="rowIn">The row of the gameboard to check for.</param>
+	    /// <param name="colIn">The column of the gameboard to check for.</param>
+	    /// <param name="onlyCheckSetVals">Only checks the values that can't be changed for possibilities.</param>
+	    /// <returns>List of possible values.</returns>
+	    private IEnumerable<int> GetPossibleChoices(int rowIn, int colIn, bool onlyCheckSetVals=false)
         {
             var sectionRow = rowIn/3;
             var sectionCol = colIn/3;
@@ -750,16 +750,21 @@ namespace SuperSudoku
         /// </summary>
         private void SolveNowClick(object sender, RoutedEventArgs e)
         {
-            puzzleSolver = new PuzzleSolver();
-            var result = puzzleSolver.SolveGrid(puzzleGrid, true);
-            if (result == true)
+            var solve = MessageBox.Show("Are you sure you want the solution?",
+                    "Gave up?", MessageBoxButton.YesNo);
+            if (solve == MessageBoxResult.Yes)
             {
-                SetPuzzleGrid(puzzleSolver.SolutionGrid);
-                MessageBox.Show("The current puzzle has been solved.");
-            }
-            else
-            {
-                MessageBox.Show("The current puzzle cannot be solved.");
+                puzzleSolver = new PuzzleSolver();
+                var result = puzzleSolver.SolveGrid(puzzleGrid, true);
+                if (result == true)
+                {
+                    SetPuzzleGrid(puzzleSolver.SolutionGrid);
+                    MessageBox.Show("The current puzzle has been solved.");
+                }
+                else
+                {
+                    MessageBox.Show("The current puzzle cannot be solved.");
+                }
             }
         }
 
