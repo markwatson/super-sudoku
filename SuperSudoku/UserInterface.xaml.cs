@@ -47,7 +47,7 @@ namespace SuperSudoku
             // Initialize game elements
             fileHandler = new FileHandler();
             puzzleSolver = new PuzzleSolver();
-            puzzleGenerator = new PuzzleGenerator(puzzleSolver);
+            puzzleGenerator = new PuzzleGenerator(puzzleSolver, 0);
             puzzleGrid = new PuzzleGrid();
 
 			// Initialize the save game dialog

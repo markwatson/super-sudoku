@@ -36,7 +36,7 @@ namespace SuperSudoku
 
         public PuzzleGrid InitGrid()
 	    {                 //Randomly fill in the first row and column of puzzlegrid
-		    PuzzleGrid tempGrid;      //temporary grid to assign values into
+            PuzzleGrid tempGrid = new PuzzleGrid { };      //temporary grid to assign values into
 		    int row = 0;                           //variable for navigating 'rows'
 		    int col = 0;                        //variable for navigating 'columns'
 		    int newVal;                                  //value to place into grid
@@ -54,7 +54,7 @@ namespace SuperSudoku
 		    { //fills in column 0 with remaining possible values, storing in place-
 		      //holder as it goes so as to preserve when placing in row 0 later
 			    randIndex = rnd.Next(0,valueSet.Count);
-			    newVal = valueSet(randIndex);
+			    newVal = valueSet[randIndex];
 			    valueSet2.Add(newVal);
 			    valueSet.Remove(newVal);
 			    tempGrid.InitSetCell(row,col,newVal);
@@ -64,11 +64,11 @@ namespace SuperSudoku
 		    {        //fills in col 1,2 of row 0, checking that don't duplicate the
 		                                          //values in rows 1,2 of col 0
 			    randIndex = rnd.Next(0,valueSet2.Count);
-			    newVal = valueSet2(randIndex);
-			    while((newVal == tempGrid.GetCell(1,0)||(newVal == tempGrid.GetCell(2,0)))
+			    newVal = valueSet2[randIndex];
+			    while((newVal == tempGrid.GetCell(1,0)||(newVal == tempGrid.GetCell(2,0))))
 			    {
 				    randIndex = rnd.Next(0,valueSet2.Count);
-				    newVal = valueSet2(randIndex);
+				    newVal = valueSet2[randIndex];
 			    }
 			    valueSet2.Remove(newVal);
 			    tempGrid.InitSetCell(row,col,newVal);
@@ -76,14 +76,14 @@ namespace SuperSudoku
 		    for(col = 3; col < 9; col++)
 		    {           //fill in remainder of row 0 with remaining possible values
 			    randIndex = rnd.Next(0,valueSet2.Count);
-			    newVal = valueSet2(randIndex);
+			    newVal = valueSet2[randIndex];
 			    valueSet2.Remove(newVal);
 			    tempGrid.InitSetCell(row,col,newVal);
 		    }
 		    solved = puzzleSolver.SolveGrid(tempGrid, false); //Slv to fill remainder of grid
 		    solutionGrid = puzzleSolver.SolutionGrid;
             permaGrid = Blanker(solutionGrid);       //call Blanker to carry out the
-		             //blanking of fileds,then return the grid to user to solve
+            return permaGrid;         //blanking of fileds,then return the grid to user to solve
 	    }
         //	Call SolveGrid to solve puzzlegrid
         //Store solved gamegrid as the correct solution in solutiongrid
