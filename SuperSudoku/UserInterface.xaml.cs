@@ -779,7 +779,8 @@ namespace SuperSudoku
 
 	    private void AboutClick(object sender, RoutedEventArgs e)
 	    {
-            MessageBox.Show("SuperSudoku 1.0\n\nSmile and be green :)");
+            MessageBox.Show("SuperSudoku 1.0\n\nSmile and be green :)" +
+                "\n\n And always look on the bright side of life.");
 	    }
 	}
 }
