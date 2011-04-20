@@ -40,6 +40,7 @@ namespace SuperSudoku
             if (noCancel)
             {
                 cancelButton.Visibility = Visibility.Hidden;
+                this.WindowStyle = WindowStyle.None;
             }
         }
 

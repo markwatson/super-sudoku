@@ -99,7 +99,7 @@
                 <MenuItem x:Name="LoadGame" Header="Load"  Click="LoadGameClick"/>
 				<MenuItem x:Name="SaveGame" Header="Save" Click="SaveGameClick" />
 				<MenuItem x:Name="SaveGameUnsolved" Header="Save Unsolved" Click="SaveGameUnsolvedClick" />
-				<MenuItem x:Name="EnterPuzzle" Header="Enter Puzzle"/>
+				<MenuItem x:Name="EnterPuzzle" Header="Enter Puzzle" Click="EnterPuzzleClick" />
 				<Separator/>
 				<MenuItem x:Name="Exit" Header="Exit" DataContext="{Binding}" Click="ExitClick" />
 			</MenuItem>
@@ -257,7 +257,8 @@
 			</TextBlock>
 		</Menu>
 		<TextBlock x:Name="HintsBox" Margin="8,0,95.873,25.76" TextWrapping="Wrap" VerticalAlignment="Bottom" Height="32.96"/>
-		<TextBlock HorizontalAlignment="Left" Margin="8,0,0,62.72" TextWrapping="Wrap" VerticalAlignment="Bottom" FontWeight="Bold" FontSize="16" Text="Hint"/>
+		<TextBlock x:Name="HintsBoxTitle" HorizontalAlignment="Left" Margin="8,0,0,62.72" TextWrapping="Wrap" VerticalAlignment="Bottom" FontWeight="Bold" FontSize="16" Text="Hint"/>
 		<Button Content="Solve Now" HorizontalAlignment="Right" Margin="0,0,8,25.76" VerticalAlignment="Bottom" Width="75" IsEnabled="True" Name="SolveNow" Click="SolveNowClick" />
-	</Grid>
+        <Button Content="Entry Complete" Visibility="Hidden" HorizontalAlignment="Right" Margin="0,0,8,25.76" VerticalAlignment="Bottom" Width="105" IsEnabled="True" Name="EntryComplete" Click="EntryCompleteClick" />
+    </Grid>
 </Window>

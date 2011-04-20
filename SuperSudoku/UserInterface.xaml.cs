@@ -25,6 +25,7 @@ namespace SuperSudoku
         // State properties are defined here
         private bool showHintsOn;
 	    private bool showErrorsOn;
+	    private bool inPuzzleEnterMode = false;
 
         // helper enum for moving around the grid
         private enum Direction
@@ -61,6 +62,46 @@ namespace SuperSudoku
 		}
 
         // The following methods are helper methods
+        /// <summary>
+        /// Enters the puzzle entry state.
+        /// </summary>
+        private void EnterPuzzleEntryState()
+        {
+            // clear puzzle grid
+            puzzleGrid = new PuzzleGrid();
+            SetPuzzleGrid(puzzleGrid);
+
+            // hide buttons
+            SolveNow.Visibility = Visibility.Hidden;
+            HintsBox.Visibility = Visibility.Hidden;
+            HintsBoxTitle.Visibility = Visibility.Hidden;
+
+            // show correct buttons
+            EntryComplete.Visibility = Visibility.Visible;
+
+            inPuzzleEnterMode = true;
+        }
+
+        /// <summary>
+        /// Enters the puzzle entry state.
+        /// </summary>
+        private void LeavePuzzleEntryState()
+        {
+            // finish puzzle grid
+            puzzleGrid.Finish();
+            SetPuzzleGrid(puzzleGrid);
+
+            // hide buttons
+            SolveNow.Visibility = Visibility.Visible;
+            HintsBox.Visibility = Visibility.Visible;
+            HintsBoxTitle.Visibility = Visibility.Visible;
+
+            // show correct buttons
+            EntryComplete.Visibility = Visibility.Hidden;
+
+            inPuzzleEnterMode = false;
+        }
+
         /// <summary>
         /// This method shows the save file dialog box. It's called by the save game menu items.
         /// </summary>
@@ -695,5 +736,35 @@ namespace SuperSudoku
         {
             MakeNewGame(true);
         }
+
+        private void EnterPuzzleClick(object sender, RoutedEventArgs e)
+        {
+            // save game if we need to
+            if (GameInProgress())
+            {
+                var save = MessageBox.Show("Save current game before creating a new one?",
+                    "Save current game?", MessageBoxButton.YesNo);
+                if (save == MessageBoxResult.Yes)
+                {
+                    SaveGameClick(sender, e);
+                }
+            }
+
+            EnterPuzzleEntryState();
+        }
+
+	    private void EntryCompleteClick(object sender, RoutedEventArgs e)
+	    {
+            puzzleSolver = new PuzzleSolver();
+            var result = puzzleSolver.SolveGrid((PuzzleGrid)puzzleGrid.Clone(), true);
+            if (result == true)
+            {
+                LeavePuzzleEntryState();
+            }
+            else
+            {
+                MessageBox.Show("That puzzle is not solvable, please modify it so that it is.");
+            }
+	    }
 	}
 }
