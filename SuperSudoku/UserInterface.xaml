@@ -15,6 +15,8 @@
 
 		<SolidColorBrush x:Key="BaseBackground-Sketch" Color="#FFFFFFFF"/>
 		<SolidColorBrush x:Key="DisabledBackground-Sketch" Color="#FFE3E8EE"/>
+        <SolidColorBrush x:Key="ErrorBackground" Color="#FFFF5757"/>
+        
 		<FontFamily x:Key="FontFamily-Sketch">/SuperSudokuMockup.Screens;component/Fonts/#Buxton Sketch</FontFamily>
 		<FontWeight x:Key="FontWeight-Sketch">Normal</FontWeight>
 

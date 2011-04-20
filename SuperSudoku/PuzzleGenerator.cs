@@ -45,7 +45,6 @@ namespace SuperSudoku
 		    int row = 0;                           //variable for navigating 'rows'
 		    int col = 0;                        //variable for navigating 'columns'
 		    int newVal;                                  //value to place into grid
-            bool solved;
 		    List<int> valueSet = new List<int>(Enumerable.Range(-9, 9));   //range 
 		                             //of numbers that can be added to the grid
 		    List<int> valueSet2 = new List<int>(); //placeholder values in column 0

@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using Microsoft.Win32;
 
 namespace SuperSudoku
@@ -350,6 +352,10 @@ namespace SuperSudoku
                     if (box != null)
                     {
                         box.Style = (Style)(Resources["GridElement"]);
+                        if (puzzleGrid.Grid[i, j] > 0)
+                        {
+                            box.Background = (Brush)(Resources["BaseBackground-Sketch"]);
+                        }
 
                         if (grid.Grid[i,j] < 0)
                         {
@@ -372,12 +378,37 @@ namespace SuperSudoku
         }
 
         /// <summary>
+        /// This function sets a grid location to a given value. It also checks
+        /// if the item is valid, if needed.
+        /// </summary>
+        /// <param name="row">The row of the element</param>
+        /// <param name="col">The column of the element</param>
+        /// <param name="val">The value to set it to</param>
+        /// <param name="sender">The grid object</param>
+        private void SetGridElement(int row, int col, int val, object sender)
+        {
+            if (showErrorsOn)
+            {
+                var possibilities = ((List<int>) GetPossibleChoices(row, col, true));
+                if (!possibilities.Contains(val))
+                {
+                    ((TextBox)sender).Background = (Brush)(Resources["ErrorBackground"]);
+                }
+            }
+
+            ((TextBox)sender).Text = val.ToString();
+            puzzleGrid.InitSetCell(row, col, val);
+        }
+
+        
+
+        /// <summary>
         /// Get's all the possible choices for a given row/col
         /// </summary>
         /// <param name="rowIn">The row of the gameboard to check for.</param>
         /// <param name="colIn">The column of the gameboard to check for.</param>
         /// <returns>List of possible values.</returns>
-        private IEnumerable<int> GetPossibleChoices(int rowIn, int colIn)
+        private IEnumerable<int> GetPossibleChoices(int rowIn, int colIn, bool onlyCheckSetVals=false)
         {
             var sectionRow = rowIn/3;
             var sectionCol = colIn/3;
@@ -385,16 +416,30 @@ namespace SuperSudoku
             var possibilities = new List<int>(); // the possibilities are endless
             for (var i = 1; i < Max; i++)
             {
+                var tmpPuzzleGrid = (PuzzleGrid) puzzleGrid.Clone();
+                if (onlyCheckSetVals)
+                {
+                    for (var row = 0; row < Max; row++)
+                    {
+                        for (var col = 0; col < Max; col++)
+                        {
+                            if (tmpPuzzleGrid.Grid[row, col] > 0)
+                            {
+                                tmpPuzzleGrid.InitSetCell(row, col, 0);
+                            }
+                        }
+                    }
+                }
                 var neverSeen = true;
 
                 // if this number is not the value in the current cell
-                if (Math.Abs(puzzleGrid.Grid[rowIn, colIn]) != i)
+                if (Math.Abs(tmpPuzzleGrid.Grid[rowIn, colIn]) != i)
                 {
                     // check column
                     for (var row = 0; row < GameBoardRows; row++)
                     {
                         // did we just see the number we're looking for in this column somehwere?
-                        if (Math.Abs(puzzleGrid.Grid[row, colIn]) == i)
+                        if (Math.Abs(tmpPuzzleGrid.Grid[row, colIn]) == i)
                         {
                             neverSeen = false;
                         }
@@ -402,7 +447,7 @@ namespace SuperSudoku
                     // check row
                     for (var col = 0; col < GameBoardCols; col++)
                     {
-                        if (Math.Abs(puzzleGrid.Grid[rowIn, col]) == i)
+                        if (Math.Abs(tmpPuzzleGrid.Grid[rowIn, col]) == i)
                         {
                             neverSeen = false;
                         }
@@ -415,7 +460,7 @@ namespace SuperSudoku
                         {
                             // if we're in the same section and we found the number we're working on
                             if (sectionRow == r / 3 && sectionCol == c / 3 &&
-                                Math.Abs(puzzleGrid.Grid[r, c]) == i)
+                                Math.Abs(tmpPuzzleGrid.Grid[r, c]) == i)
                             {
                                 neverSeen = false;
                             }
@@ -511,6 +556,18 @@ namespace SuperSudoku
         private void ShowErrorsChecked(object sender, RoutedEventArgs e)
         {
             showErrorsOn = true;
+
+            for (int i = 0; i < Max; i++)
+            {
+                for (int j = 0; j < Max; j++)
+                {
+                    if (puzzleGrid.Grid[i,j] > 0)
+                    {
+                        var box = (TextBox)FindName(GetTextBoxNameFromRowColumn(i + 1, j + 1));
+                        SetGridElement(i, j, puzzleGrid.Grid[i, j], box);
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -518,6 +575,18 @@ namespace SuperSudoku
         /// </summary>
         private void ShowErrorsUnchecked(object sender, RoutedEventArgs e)
         {
+            for (int i = 0; i < Max; i++)
+            {
+                for (int j = 0; j < Max; j++)
+                {
+                    var box = (TextBox)FindName(GetTextBoxNameFromRowColumn(i + 1, j + 1));
+                    if (puzzleGrid.Grid[i, j] > 0)
+                    {
+                        box.Background = (Brush)(Resources["BaseBackground-Sketch"]);
+                    }
+                }
+            }
+
             showErrorsOn = false;
         }
 
@@ -590,54 +659,46 @@ namespace SuperSudoku
                     // When we're setting the boxes we also keep the game grid up to date.
                 case Key.D1:
                 case Key.NumPad1:
-                    ((TextBox)sender).Text = "1";
-                    puzzleGrid.InitSetCell(rowCol.Item1, rowCol.Item2, 1);
+                    SetGridElement(rowCol.Item1, rowCol.Item2, 1, sender);
                     break;
                 case Key.D2:
                 case Key.NumPad2:
-                    ((TextBox)sender).Text = "2";
-                    puzzleGrid.InitSetCell(rowCol.Item1, rowCol.Item2, 2);
+                    SetGridElement(rowCol.Item1, rowCol.Item2, 2, sender);
                     break;
                 case Key.D3:
                 case Key.NumPad3:
-                    ((TextBox)sender).Text = "3";
-                    puzzleGrid.InitSetCell(rowCol.Item1, rowCol.Item2, 3);
+                    SetGridElement(rowCol.Item1, rowCol.Item2, 3, sender);
                     break;
                 case Key.D4:
                 case Key.NumPad4:
-                    ((TextBox)sender).Text = "4";
-                    puzzleGrid.InitSetCell(rowCol.Item1, rowCol.Item2, 4);
+                    SetGridElement(rowCol.Item1, rowCol.Item2, 4, sender);
                     break;
                 case Key.D5:
                 case Key.NumPad5:
-                    ((TextBox)sender).Text = "5";
-                    puzzleGrid.InitSetCell(rowCol.Item1, rowCol.Item2, 5);
+                    SetGridElement(rowCol.Item1, rowCol.Item2, 5, sender);
                     break;
                 case Key.D6:
                 case Key.NumPad6:
-                    ((TextBox)sender).Text = "6";
-                    puzzleGrid.InitSetCell(rowCol.Item1, rowCol.Item2, 6);
+                    SetGridElement(rowCol.Item1, rowCol.Item2, 6, sender);
                     break;
                 case Key.D7:
                 case Key.NumPad7:
-                    ((TextBox)sender).Text = "7";
-                    puzzleGrid.InitSetCell(rowCol.Item1, rowCol.Item2, 7);
+                    SetGridElement(rowCol.Item1, rowCol.Item2, 7, sender);
                     break;
                 case Key.D8:
                 case Key.NumPad8:
-                    ((TextBox)sender).Text = "8";
-                    puzzleGrid.InitSetCell(rowCol.Item1, rowCol.Item2, 8);
+                    SetGridElement(rowCol.Item1, rowCol.Item2, 8, sender);
                     break;
                 case Key.D9:
                 case Key.NumPad9:
-                    ((TextBox)sender).Text = "9";
-                    puzzleGrid.InitSetCell(rowCol.Item1, rowCol.Item2, 9);
+                    SetGridElement(rowCol.Item1, rowCol.Item2, 9, sender);
                     break;
                 case Key.Delete:
                 case Key.Back:
                 case Key.D0:
                 case Key.NumPad0:
                 case Key.Space:
+                    ((TextBox)sender).Background = (Brush)(Resources["BaseBackground-Sketch"]);
                     ((TextBox)sender).Text = "";
                     puzzleGrid.InitSetCell(rowCol.Item1, rowCol.Item2, 0);
                     break;

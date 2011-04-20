@@ -194,7 +194,7 @@ namespace SuperSudoku
         /// <param name="col">column of target cell</param>
         /// <param name="value">value being sought</param>
         /// <returns>True if value can occupy cell at [row, col]</returns>
-        private bool IsPossible(PuzzleGrid g, int row, int col, int value)
+        public bool IsPossible(PuzzleGrid g, int row, int col, int value)
         {                     //Return true if value can go into [row, col] now
             bool result;
             result = (!IsInRow(g, row, value) && ! IsInCol(g, col, value) &&
